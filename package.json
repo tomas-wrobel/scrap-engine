@@ -1,6 +1,6 @@
 {
   "name": "scrap-engine",
-  "version": "1.0.6",
+  "version": "0.0.1",
   "description": "Bridging the gap between block programming and JavaScript",
   "files": [
     "dist/*"
@@ -12,7 +12,8 @@
     "javascript",
     "scratch",
     "code.org",
-    "blockly"
+    "blockly",
+    "scrap"
   ],
   "author": {
     "name": "Ron Ilan",
