@@ -1,8 +1,7 @@
 name: Release (Build & Publish)
-
-on:
+'on':
   push:
-    branches
+    branches:
       - master
 
 jobs:
