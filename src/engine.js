@@ -18,7 +18,7 @@ export function Stage(...images) {
     const stage = new BlockLikeStage({sensing: true})
     images.forEach((image) => {
         const backdrop = new Backdrop({image});
-        backdrop.addTo(stae);
+        backdrop.addTo(stage);
     });
     return stage;
 }
