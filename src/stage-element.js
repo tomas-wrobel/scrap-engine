@@ -126,7 +126,7 @@ export default class StageElement {
 
     let marginTB = 0
     if (stage.element.el.parentElement.tagName === 'BODY') {
-      marginTB = Math.floor((window.innerHeight - stage.height) / 2)
+      marginTB = Math.floor((innerHeight - stage.height) / 2)
       marginTB < 0 ? marginTB = 0 : null
     }
 

@@ -17,7 +17,7 @@ jobs:
           node-version: '16.x'
           registry-url: 'https://registry.npmjs.org'
       - run: npm install --no-optional
-      - run: npm run build
+      - run: npx webpack --progress
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.BLOCKLIKE_NPM_AUTOMATION }}

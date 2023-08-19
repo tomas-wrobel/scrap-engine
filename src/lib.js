@@ -21,31 +21,7 @@
 * Fabriqué au Canada : Made in Canada
 */
 
-import * as styles from './document-css'
-import platforms from './platforms'
-
-import Stage from './stage' // eslint-disable-line no-unused-vars
-import Backdrop from './backdrop' // eslint-disable-line no-unused-vars
-import Sprite from './sprite' // eslint-disable-line no-unused-vars
-import Costume from './costume' // eslint-disable-line no-unused-vars
-
-export { Stage }
-export { Backdrop }
-export { Sprite }
-export { Costume };
-
-(function init () {
-  const style = document.createElement('style')
-
-  style.type = 'text/css'
-  style.innerHTML = `
-    ${styles.defaultCSS}\n\n 
-    ${styles.uiCSS}\n\n 
-    ${styles.thinkCSS}\n\n 
-    ${styles.sayCSS} \n\n 
-    ${styles.askCSS}`
-
-  document.getElementsByTagName('head')[0].appendChild(style)
-
-  platforms()
-}())
+export {default as Stage} from './stage'
+export {default as Backdrop} from './backdrop'
+export {default as Sprite} from './sprite'
+export {default as Costume} from './costume'

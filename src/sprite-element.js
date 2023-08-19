@@ -84,7 +84,7 @@ export default class SpriteElement {
         this.el.firstChild.src = sprite.costume.image
       }
     } else if (sprite.costume && sprite.costume.image) { // needs an image inserted.
-      const image = new window.Image()
+      const image = new Image()
 
       image.style.width = '100%'
       image.style.height = '100%'

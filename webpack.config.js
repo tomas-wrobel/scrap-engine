@@ -1,8 +1,5 @@
 const path = require('path')
 
-const PACKAGE = require('./package.json')
-const version = PACKAGE.version
-
 module.exports = {
   entry: './src/lib.js',
   mode: 'development',
@@ -21,7 +18,7 @@ module.exports = {
   },
   devtool: 'inline-source-map',
   output: {
-    filename: `blocklike-${version}.js`,
+    filename: `engine.js`,
     path: path.resolve(__dirname, 'dist'),
     library: 'blockLike'
   },

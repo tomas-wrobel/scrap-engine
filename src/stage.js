@@ -5,6 +5,7 @@ import StageSurface from './stage-surface'
 import SpriteElement from './sprite-element'
 
 import sensing from './stage-sensing'
+import Backdrop from './backdrop'
 
 /**
  * Class representing a Stage.
@@ -39,7 +40,7 @@ export default class Stage extends Entity {
   constructor (options = {}) {
     const defaults = {
       width: window.innerWidth,
-      height: window.innerHeight,
+      height: innerHeight,
       parent: document.body,
       pace: 33,
       backdrop: null
@@ -78,6 +79,16 @@ export default class Stage extends Entity {
     actual.sensing ? sensing(this) : null
 
     this.element.update(this)
+  }
+
+  static Scrap = class extends Stage {
+    constructor(...images) {
+      super({sensing: true})
+      images.forEach((image) => {
+        const backdrop = new Backdrop({image})
+        backdrop.addTo(this)
+      });
+    }
   }
 
   /**

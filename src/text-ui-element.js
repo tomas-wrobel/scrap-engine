@@ -24,7 +24,7 @@ export default class TextUiElement {
       * sendAnswer - dispatches an event when the user has submitted the input.
       */
       function sendAnswer (value) {
-        const event = new window.CustomEvent(`blockLike.ask.${sprite.id}.${sprite.askId}`, { detail: { value, askId: sprite.askId } })
+        const event = new CustomEvent(`blockLike.ask.${sprite.id}.${sprite.askId}`, { detail: { value, askId: sprite.askId } })
         document.dispatchEvent(event)
       }
 

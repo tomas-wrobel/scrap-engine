@@ -37,7 +37,7 @@ export default class Backdrop extends Look {
 
     // preload
     if (this.image) {
-      const image = new window.Image()
+      const image = new Image()
       image.src = this.image
     }
   }

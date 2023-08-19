@@ -1,4 +1,4 @@
-import Look from './look'
+import Look from "./look";
 
 /**
  * Class representing a Costume.
@@ -17,148 +17,150 @@ import Look from './look'
  * });
  */
 export default class Costume extends Look {
-  /**
-  * constructor - Creates a Costume to be used by Sprite objects..
-  *
-  * @param {object} options - options for the costume.
-  * @param {number} options.width - the costume width in pixels. Default is 100.
-  * @param {number} options.height - the costume height in pixels. Default is 100.
-  * @param {string} options.image - a URI (or data URI) for the costume image.
-  * @param {string} options.color - a css color string ('#ff0000', 'red')
-  */
-  constructor (options = {}) {
-    const defaults = {
-      width: 100,
-      height: 100,
-      color: null
-    }
-    const actual = { ...defaults, ...options }
+	/**
+	 * constructor - Creates a Costume to be used by Sprite objects..
+	 *
+	 * @param {object} options - options for the costume.
+	 * @param {number} options.width - the costume width in pixels. Default is 100.
+	 * @param {number} options.height - the costume height in pixels. Default is 100.
+	 * @param {string} options.image - a URI (or data URI) for the costume image.
+	 * @param {string} options.color - a css color string ('#ff0000', 'red')
+	 */
+	constructor(options = {}) {
+		const defaults = {
+			width: 100,
+			height: 100,
+			color: null,
+		};
+		const actual = {...defaults, ...options};
 
-    super()
+		super();
 
-    this.width = actual.width
-    this.height = actual.height
-    this.visibleWidth = actual.width
-    this.visibleHeight = actual.height
+		this.width = actual.width;
+		this.height = actual.height;
+		this.visibleWidth = actual.width;
+		this.visibleHeight = actual.height;
 
-    this.image = actual.image
-    this.color = actual.color
+		this.image = actual.image;
+		this.color = actual.color;
 
-    // preload
-    if (this.image) {
-      const image = new window.Image()
-      image.src = this.image
-    }
+		// preload
+		if (this.image) {
+			const image = new Image();
+			image.src = this.image;
+		}
 
-    this.innerHTML = ''
-  }
+		this.innerHTML = "";
+	}
 
-  /** Setup Actions * */
+	/** Setup Actions * */
 
-  /**
-  * addTo - Adds the costume to the sprite
-  *
-  * @example
-  * let sprite = new blockLike.Sprite();
-  * let costume = new blockLike.Costume();
-  *
-  * costume.addTo(sprite);
-  *
-  * @param {object} sprite - which sprite to add the costume too.
-  */
-  addTo (sprite) {
-    const curSprite = sprite
-    sprite.costumes.push(this)
+	/**
+	 * addTo - Adds the costume to the sprite
+	 *
+	 * @example
+	 * let sprite = new blockLike.Sprite();
+	 * let costume = new blockLike.Costume();
+	 *
+	 * costume.addTo(sprite);
+	 *
+	 * @param {object} sprite - which sprite to add the costume too.
+	 */
+	addTo(sprite) {
+		const curSprite = sprite;
+		sprite.costumes.push(this);
 
-    // if "bare" set the added as active.
-    if (!sprite.costume) {
-      curSprite.costume = sprite.costumes[0]
-      curSprite.width = sprite.costume.visibleWidth
-      curSprite.height = sprite.costume.visibleHeight
-    }
+		// if "bare" set the added as active.
+		if (!sprite.costume) {
+			curSprite.costume = sprite.costumes[0];
+			curSprite.width = sprite.costume.visibleWidth;
+			curSprite.height = sprite.costume.visibleHeight;
+		}
 
-    sprite.element ? sprite.element.update(sprite) : null
-  }
+		sprite.element ? sprite.element.update(sprite) : null;
+	}
 
-  /**
-  * removeFrom - Removes the costume from to the sprite
-  *
-  * @example
-  * let sprite = new blockLike.Sprite();
-  * let costume = new blockLike.Costume();
-  *
-  * costume.addTo(sprite);
-  * costume.removeFrom(sprite);
-  *
-  * @param {object} sprite - which sprite to remove the costume from.
-  */
-  removeFrom (sprite) {
-    sprite.removeCostume(this)
-  }
+	/**
+	 * removeFrom - Removes the costume from to the sprite
+	 *
+	 * @example
+	 * let sprite = new blockLike.Sprite();
+	 * let costume = new blockLike.Costume();
+	 *
+	 * costume.addTo(sprite);
+	 * costume.removeFrom(sprite);
+	 *
+	 * @param {object} sprite - which sprite to remove the costume from.
+	 */
+	removeFrom(sprite) {
+		sprite.removeCostume(this);
+	}
 
-  /** Looks * */
+	/** Looks * */
 
-  /**
-  * resizeToImage - sets the width and height of the costume to that of the image file.
-  *
-  * @example
-  * let costume = new blockLike.Costume({
-  *   image: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Sheep_in_gray.svg'
-  * });
-  *
-  * costume.resizeToImage();
-  */
-  resizeToImage () {
-    // register the image size from the file
-    if (this.image) {
-      const image = new window.Image()
-      const me = this
+	/**
+	 * resizeToImage - sets the width and height of the costume to that of the image file.
+	 *
+	 * @example
+	 * let costume = new blockLike.Costume({
+	 *   image: 'https://upload.wikimedia.org/wikipedia/commons/d/d3/Sheep_in_gray.svg'
+	 * });
+	 *
+	 * costume.resizeToImage();
+	 */
+	resizeToImage() {
+		// register the image size from the file
+		if (this.image) {
+			const image = new Image();
+      
+			return new Promise(resolve => {
+				image.src = this.image;
 
-      image.src = this.image
+				image.addEventListener("load", () => {
+					this.width = image.width;
+					this.height = image.height;
+					this.visibleWidth = this.width;
+					this.visibleHeight = this.height;
+					resolve();
+				});
+			});
+		}
+	}
 
-      image.addEventListener('load', () => {
-        me.width = image.width
-        me.height = image.height
-        me.visibleWidth = me.width
-        me.visibleHeight = me.height
-      })
-    }
-  }
+	/**
+	 * inner - Places an HTML element inside the costume.
+	 *
+	 * @example
+	 * let costume = new blockLike.Costume();
+	 *
+	 * costume.inner('<p class="big centered rainbow">:)</p>');
+	 *
+	 * @example
+	 * costume.inner('I like text only');
+	 *
+	 * @param {string} html - the html to insert.
+	 */
+	inner(html) {
+		this.innerHTML = html;
+	}
 
-  /**
-  * inner - Places an HTML element inside the costume.
-  *
-  * @example
-  * let costume = new blockLike.Costume();
-  *
-  * costume.inner('<p class="big centered rainbow">:)</p>');
-  *
-  * @example
-  * costume.inner('I like text only');
-  *
-  * @param {string} html - the html to insert.
-  */
-  inner (html) {
-    this.innerHTML = html
-  }
+	/**
+	 * insert - Places a DOM element inside the costume.
+	 *
+	 * @example
+	 * let costume = new blockLike.Costume();
+	 *
+	 * costume.insert(document.getElementById('my-html-creation'));
+	 *
+	 * @param {object} el - the DOM element.
+	 */
+	insert(el) {
+		const iel = el.cloneNode(true);
+		iel.style.display = "block";
+		iel.style.visibility = "inherit";
 
-  /**
-  * insert - Places a DOM element inside the costume.
-  *
-  * @example
-  * let costume = new blockLike.Costume();
-  *
-  * costume.insert(document.getElementById('my-html-creation'));
-  *
-  * @param {object} el - the DOM element.
-  */
-  insert (el) {
-    const iel = el.cloneNode(true)
-    iel.style.display = 'block'
-    iel.style.visibility = 'inherit'
-
-    this.image = null
-    this.color = 'transparent'
-    this.innerHTML = iel.outerHTML
-  }
+		this.image = null;
+		this.color = "transparent";
+		this.innerHTML = iel.outerHTML;
+	}
 }
