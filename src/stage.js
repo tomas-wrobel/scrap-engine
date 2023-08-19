@@ -81,16 +81,6 @@ export default class Stage extends Entity {
     this.element.update(this)
   }
 
-  static Scrap = class extends Stage {
-    constructor(...images) {
-      super({sensing: true})
-      images.forEach((image) => {
-        const backdrop = new Backdrop({image})
-        backdrop.addTo(this)
-      });
-    }
-  }
-
   /**
   * delete - Deletes the stage element.
   *
