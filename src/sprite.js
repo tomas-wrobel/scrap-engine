@@ -157,7 +157,7 @@ export default class Sprite extends Entity {
 	}
 
 	_paced() {
-		return this.wait(this.pace);
+		return new Promise(resolve => setTimeout(resolve, this.pace));
 	}
 
 	/** Setup Actions * */
