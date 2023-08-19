@@ -2,9 +2,8 @@ name: Release (Build & Publish)
 
 on:
   push:
-    tags:
-      - "v*"
-  workflow_dispatch: # can run manually. npm will reject same version publish
+    branches
+      - master
 
 jobs:
   Build-Publish:
