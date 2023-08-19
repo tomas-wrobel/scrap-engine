@@ -6,6 +6,9 @@ module.exports = {
   output: {
     filename: "engine.js",
     path: path.resolve(__dirname, 'dist'),
-    library: 'Scrap'
+    library: {
+      name: "Scrap",
+      type: "window"
+    }
   }
 }
