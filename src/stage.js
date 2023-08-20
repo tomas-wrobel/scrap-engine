@@ -414,12 +414,4 @@ export default class Stage extends Entity {
     isKeyPressed(check) {
         return this.keys.includes(check);
     }
-
-    getMouseX() {
-        return this.mouseX;
-    }
-
-    getMouseY() {
-        return this.mouseY;
-    }   
 }

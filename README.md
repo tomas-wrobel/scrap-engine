@@ -15,8 +15,8 @@ See [BlockLike.org](https://www.blocklike.org) for details, [docs](https://www.b
 
 # Authors
 
-[Ron Ilan](https://www.ronilan.com)
-[Tomáš Wróbel](https://tomaswrobel.dev)
+- [Ron Ilan](https://www.ronilan.com)
+- [Tomáš Wróbel](https://tomaswrobel.dev)
 
 ## License
 [MIT](https://en.wikipedia.org/wiki/MIT_License)
