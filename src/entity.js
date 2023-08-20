@@ -182,8 +182,7 @@ export default class Entity {
 				e => {
 					func.call(this);
 					e.stopPropagation();
-				},
-				options
+				}
 			);
 		}
 	}

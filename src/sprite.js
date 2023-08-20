@@ -1085,10 +1085,10 @@ export default class Sprite extends Entity {
 
 			return new Promise(resolve => {
 				// this will wait for user input
-				document.addEventListener(`blockLike.ask.${this.id}.${this.askId}`, () => {
+				document.addEventListener(`blockLike.ask.${this.id}.${this.askId}`, e => {
 					// remove the UI.
 					this.textui ? (this.textui = this.textui.delete(me)) : null;
-					resolve();
+					resolve(e.detail.value);
 				}, {once: true});
 			});
 		}
