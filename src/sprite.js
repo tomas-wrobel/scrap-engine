@@ -274,6 +274,10 @@ export default class Sprite extends Entity {
         this.element ? (this.element = this.element.delete(this)) : null;
     }
 
+    delete() {
+        this.removeFrom(this.stage);
+    }
+
     /** Events * */
 
     /**

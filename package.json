@@ -1,32 +1,31 @@
 {
-  "name": "scrap-engine",
-  "version": "0.0.9",
-  "description": "Bridging the gap between block programming and JavaScript",
-  "files": [
-    "dist/*"
-  ],
-  "keywords": [
-    "blocklike",
-    "block",
-    "blocklike.org",
-    "javascript",
-    "scratch",
-    "code.org",
-    "blockly",
-    "scrap"
-  ],
-  "author": {
-    "name": "Ron Ilan",
-    "url": "http://www.ronilan.com"
-  },
-  "main": "dist/engine.js",
-  "license": "MIT",
-  "devDependencies": {
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ronilan/BlockLike.git"
-  }
+    "name": "scrap-engine",
+    "version": "0.0.10",
+    "description": "Bridging the gap between block programming and JavaScript",
+    "files": ["dist/*"],
+    "keywords": [
+        "blocklike",
+        "block",
+        "blocklike.org",
+        "javascript",
+        "scratch",
+        "code.org",
+        "blockly",
+        "scrap"
+    ],
+    "author": {
+        "name": "Ron Ilan",
+        "url": "http://www.ronilan.com"
+    },
+    "main": "dist/engine.js",
+    "license": "MIT",
+    "devDependencies": {
+        "webpack": "^5.38.1",
+        "webpack-cli": "^4.7.2"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/tomas-wrobel/scrap.git"
+    },
+    "homepage": "https://scrap-blocks.web.app"
 }
