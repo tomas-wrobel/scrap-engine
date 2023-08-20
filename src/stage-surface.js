@@ -23,12 +23,12 @@ export default class StageSurface {
         if (sprite.drawing) {
             this.context.beginPath();
             this.context.moveTo(
-                sprite.stageWidth / 2 + sprite.x,
-                sprite.stageHeight / 2 + sprite.y * -1
+                sprite.stage.width / 2 + sprite.x,
+                sprite.stage.height / 2 + sprite.y * -1
             );
             this.context.lineTo(
-                sprite.stageWidth / 2 + sprite.prevX,
-                sprite.stageHeight / 2 + sprite.prevY * -1
+                sprite.stage.width / 2 + sprite.prevX,
+                sprite.stage.height / 2 + sprite.prevY * -1
             );
             this.context.lineWidth = sprite.penSize;
             this.context.strokeStyle = sprite.penColor;
@@ -40,6 +40,6 @@ export default class StageSurface {
      * clear - clears the canvas
      */
     clear(sprite) {
-        this.context.clearRect(0, 0, sprite.stageWidth, sprite.stageHeight);
+        this.context.clearRect(0, 0, sprite.stage.width, sprite.stage.height);
     }
 }

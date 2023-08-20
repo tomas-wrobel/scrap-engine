@@ -91,57 +91,6 @@ export default class Stage extends Entity {
         this.element = this.element.delete(this);
     }
 
-    /** Setup Actions * */
-
-    /**
-     * addSprite - Adds a sprite to the stage
-     *
-     * @example
-     * let stage = new blockLike.Stage();
-     * let sprite = new blockLike.Sprite();
-     *
-     * stage.addSprite(sprite);
-     *
-     * @param {object} sprite - the sprite to add.
-     */
-    addSprite(sprite) {
-        const curSprite = sprite;
-
-        curSprite.element = new SpriteElement(sprite, this);
-        curSprite.surface = new StageSurface(this);
-
-        curSprite.element.flag = this.element.flag;
-        curSprite.againstBackdrop = this.element.backdropContainer;
-
-        curSprite.stageWidth = this.width;
-        curSprite.stageHeight = this.height;
-
-        this.sprites.push(curSprite);
-        curSprite.z = this.sprites.length;
-
-        sprite.element.update(curSprite);
-    }
-
-    /**
-     * removeSprite - Removes a sprite from the stage
-     *
-     * @example
-     * let stage = new blockLike.Stage();
-     * let sprite = new blockLike.Sprite();
-     *
-     * stage.addSprite(sprite);
-     * stage.removeSprite(sprite);
-     *
-     * @param {object} sprite - the sprite to add.
-     */
-    removeSprite(sprite) {
-        const curSprite = sprite;
-        this.sprites = this.sprites.filter(item => item !== sprite);
-        curSprite.element
-            ? (curSprite.element = curSprite.element.delete(curSprite))
-            : null;
-    }
-
     /** looks * */
 
     /**

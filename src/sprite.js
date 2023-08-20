@@ -133,6 +133,8 @@ export default class Sprite extends Entity {
         this.prevX = 0;
         this.prevY = 0;
 
+        this.stage = null;
+
         this.showing = true;
         this.direction = 90;
         this.magnification = 100;
@@ -149,18 +151,6 @@ export default class Sprite extends Entity {
         this.cssRules = [];
         this.classes = [];
     }
-
-    static Scrap = class extends Sprite {
-        constructor(...images) {
-            super(null);
-            images.forEach(image => {
-                const costume = new Costume({image});
-                costume.resizeToImage().then(() => {
-                    this.addCostume(costume);
-                });
-            });
-        }
-    };
 
     _paced() {
         return new Promise(resolve => setTimeout(resolve, this.pace));
@@ -180,8 +170,7 @@ export default class Sprite extends Entity {
      * @param {object} stage - which stage to add the sprite too.
      */
     addTo(stage) {
-        this.stageWidth = stage.width;
-        this.stageHeight = stage.height;
+        this.stage = stage;
 
         this.element = new SpriteElement(this, stage);
         this.surface = new StageSurface(stage);
@@ -1312,16 +1301,16 @@ export default class Sprite extends Entity {
     touchingEdge() {
         let result = null;
 
-        if (this.x + this.width / 2 > this.stageWidth / 2) {
+        if (this.x + this.width / 2 > this.stage.width / 2) {
             result = "right";
         }
-        if (this.x - this.width / 2 < -1 * (this.stageWidth / 2)) {
+        if (this.x - this.width / 2 < -1 * (this.stage.width / 2)) {
             result = "left";
         }
-        if (this.y + this.height / 2 > this.stageHeight / 2) {
+        if (this.y + this.height / 2 > this.stage.height / 2) {
             result = "top";
         }
-        if (this.y - this.height / 2 < -1 * (this.stageHeight / 2)) {
+        if (this.y - this.height / 2 < -1 * (this.stage.height / 2)) {
             result = "bottom";
         }
 
@@ -1471,8 +1460,8 @@ export default class Sprite extends Entity {
         try {
             const backdropContext = this.againstBackdrop.getContext("2d");
             const data = backdropContext.getImageData(
-                this.stageWidth / 2 - this.width / 2 + this.x,
-                this.stageHeight / 2 - this.height / 2 - this.y,
+                this.stage.width / 2 - this.width / 2 + this.x,
+                this.stage.height / 2 - this.height / 2 - this.y,
                 this.width,
                 this.height
             ).data;

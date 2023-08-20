@@ -42,8 +42,8 @@ export default class SpriteElement {
             el.style.height = `${sprite.costume.visibleHeight}px`;
         }
 
-        el.style.left = `${sprite.stageWidth / 2 + x}px`;
-        el.style.top = `${sprite.stageHeight / 2 + y}px`;
+        el.style.left = `${sprite.stage.width / 2 + x}px`;
+        el.style.top = `${sprite.stage.height / 2 + y}px`;
         el.style.zIndex = sprite.z;
 
         el.style.visibility = `${sprite.showing ? "visible" : "hidden"}`;

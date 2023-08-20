@@ -61,8 +61,8 @@ export default class TextUiElement {
 
     // looks
     // TODO: make this nicer...
-    el.style.left = `${(sprite.stageWidth / 2) + x + (sprite.width * 0.6)}px`
-    el.style.top = `${((sprite.stageHeight / 2) + y) - 80 - (Math.floor(this.text.length / 30) * 16)}px`
+    el.style.left = `${(sprite.stage.width / 2) + x + (sprite.width * 0.6)}px`
+    el.style.top = `${((sprite.stage.height / 2) + y) - 80 - (Math.floor(this.text.length / 30) * 16)}px`
 
     el.style.zIndex = sprite.z
     el.className = `blocklike-${type}`
@@ -70,7 +70,7 @@ export default class TextUiElement {
     let iel = null
     if (type === 'ask') {
       iel = askInput(sprite, el)
-      el.style.top = `${((sprite.stageHeight / 2) + y) - 110 - (Math.floor(this.text.length / 30) * 16)}px`
+      el.style.top = `${((sprite.stage.height / 2) + y) - 110 - (Math.floor(this.text.length / 30) * 16)}px`
     }
 
     sprite.element.el.parentNode.insertBefore(el, sprite.element.el)
@@ -97,10 +97,10 @@ export default class TextUiElement {
     // looks
     // TODO: make this nicer...
     el.style.left = `${(sprite.stageWidth / 2) + x + (sprite.width * 0.6)}px`
-    el.style.top = `${((sprite.stageHeight / 2) + y) - 80 - (Math.floor(this.text.length / 30) * 16)}px`
+    el.style.top = `${((sprite.stage.height / 2) + y) - 80 - (Math.floor(this.text.length / 30) * 16)}px`
 
     if (sprite.textui.type === 'ask') {
-      el.style.top = `${((sprite.stageHeight / 2) + y) - 110 - (Math.floor(this.text.length / 30) * 16)}px`
+      el.style.top = `${((sprite.stage.height / 2) + y) - 110 - (Math.floor(this.text.length / 30) * 16)}px`
     }
 
     el.style.visibility = `${(sprite.showing ? 'visible' : 'hidden')}`
