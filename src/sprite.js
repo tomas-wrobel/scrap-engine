@@ -1014,7 +1014,7 @@ export default class Sprite extends Entity {
      */
     think(text) {
         if (this.element) {
-            this.textui = this.textui?.delete();
+            this.textui = this.textui?.delete(this);
             text && (this.textui = new TextUiElement(this, "think", text));
         }
     }
@@ -1052,7 +1052,7 @@ export default class Sprite extends Entity {
      */
     say(text) {
         if (this.element) {
-            this.textui = this.textui?.delete();
+            this.textui = this.textui?.delete(this);
             text && (this.textui = new TextUiElement(this, "say", text));
         }
     }
@@ -1105,7 +1105,7 @@ export default class Sprite extends Entity {
         this.askId = this._generateUUID();
 
         if (this.element) {
-            this.textui?.delete();
+            this.textui?.delete(this);
             this.textui = new TextUiElement(this, "ask", text);
 
             return new Promise(resolve => {
