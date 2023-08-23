@@ -27,7 +27,7 @@ export default class Entity {
     }
 
     getCSSFilter() {
-        return `brightness(${this.effects.brightness}%) hue-rotate(${this.effects.color * 3.6}deg) grayscale(${this.effects.grayscale}%) opacity(${this.effects.ghost}%)`;
+        return `brightness(${this.effects.brightness}%) hue-rotate(${this.effects.color * 3.6}deg) grayscale(${this.effects.grayscale}%) opacity(${100 - this.effects.ghost}%)`;
     }
 
     changeEffect(effect, delta) {
