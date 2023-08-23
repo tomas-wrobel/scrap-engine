@@ -27,7 +27,7 @@ export default class SpriteElement {
     /**
      * update - updates the DOM element. This is always called after the constructor.
      *
-     * @param {object} sprite - the sprite to update.
+     * @param {import("./sprite").default} sprite - the sprite to update.
      */
     update(sprite) {
         const el = sprite.element.el;
@@ -42,6 +42,7 @@ export default class SpriteElement {
             el.style.height = `${sprite.costume.visibleHeight}px`;
         }
 
+        el.style.filter = sprite.getCSSFilter();
         el.style.left = `${sprite.stage.width / 2 + x}px`;
         el.style.top = `${sprite.stage.height / 2 + y}px`;
         el.style.zIndex = sprite.z;

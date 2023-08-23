@@ -150,6 +150,9 @@ export default class Sprite extends Entity {
 
         this.cssRules = [];
         this.classes = [];
+
+        /** @type {SpriteElement} */
+        this.element = null;
     }
 
     _paced() {

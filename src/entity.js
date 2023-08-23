@@ -18,6 +18,26 @@ export default class Entity {
         this.id = this._generateUUID();
         this.pace = pace;
         this.sounds = []; // will hold all sounds currently played by entity, if any.
+        this.effects = {
+            brightness: 100,
+            color: 0,
+            ghost: 0,
+            grayscale: 0
+        };
+    }
+
+    getCSSFilter() {
+        return `brightness(${this.effects.brightness}%) hue-rotate(${this.effects.color * 3.6}deg) grayscale(${this.effects.grayscale}%) opacity(${this.effects.ghost}%)`;
+    }
+
+    changeEffect(effect, delta) {
+        this.effects[effect] += delta;
+        this.element && this.element.update(this);
+    }
+
+    setEffect(effect, value) {
+        this.effects[effect] = value;
+        this.element && this.element.update(this);
     }
 
     /**
@@ -415,7 +435,7 @@ export default class Entity {
      */
     css(prop, value = null) {
         css.register(prop, value, this);
-        this.element ? this.element.update(this) : null;
+        this.element && this.element.update(this);
     }
 
     /**
@@ -430,7 +450,7 @@ export default class Entity {
      */
     addClass(name) {
         !this.hasClass(name) ? this.classes.push(name) : null;
-        this.element ? this.element.update(this) : null;
+        this.element && this.element.update(this);
     }
 
     /**
@@ -446,7 +466,7 @@ export default class Entity {
      */
     removeClass(name) {
         this.classes = this.classes.filter(item => item !== name);
-        this.element ? this.element.update(this) : null;
+        this.element && this.element.update(this);
     }
 
     /**

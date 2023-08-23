@@ -118,7 +118,7 @@ export default class StageElement {
     /**
      * update - updates the DOM element.
      *
-     * @param {object} stage - the stage to update.
+     * @param {import("./stage").default} stage - the stage to update.
      */
     update(stage) {
         const el = stage.element.el;
@@ -149,6 +149,7 @@ export default class StageElement {
             img.src = stage.backdrop.image;
         }
 
+        el.style.filter = stage.getCSSFilter();
         // zoom and placement
         el.style.transform = `scale(${stage.magnification / 100})`;
         el.style.margin = `${marginTB}px auto`;
