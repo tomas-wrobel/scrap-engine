@@ -3,22 +3,50 @@ import BlockLikeStage from "./stage";
 import Backdrop from "./backdrop";
 import Costume from "./costume";
 
-export function Sprite(...images) {
-    const sprite = new BlockLikeSprite(null);
-    images.forEach(image => {
-        const costume = new Costume({image});
-        costume.resizeToImage().then(() => {
-            sprite.addCostume(costume);
-        });
-    });
-    return sprite;
+export class Sprite extends BlockLikeSprite {
+    /**
+     * @param {Record<string, string>} images
+     */
+    constructor(images) {
+        super(null);
+        /** @type {Record<string, string>} */
+        this.costumes = {};
+        for (const image in images) {
+            this.costumes[image] = new Costume({image});
+            this.costumes[image].resizeToImage().then(() => {
+                this.addCostume(this.costumes[image]);
+            });
+        }
+    }
+
+    /**
+     * @param {string} image 
+     */
+    switchCostumeTo(image) {
+        super.switchCostumeTo(this.costumes[image]);
+    }
 }
 
-export function Stage(...images) {
-    const stage = new BlockLikeStage({sensing: true})
-    images.forEach((image) => {
-        const backdrop = new Backdrop({image});
-        backdrop.addTo(stage);
-    });
-    return stage;
+export class Stage extends BlockLikeStage {
+    /**
+     * @param {Record<string, string>} images
+     */
+    constructor(images) {
+        super(null);
+        /** @type {Record<string, string>} */
+        this.backdrops = {};
+        for (const image in images) {
+            this.backdrops[image] = new Backdrop({image});
+            this.backdrops[image].resizeToImage().then(() => {
+                this.addBackdrop(this.backdrops[image]);
+            });
+        }
+    }
+
+    /**
+     * @param {string} image
+     */
+    switchBackdropTo(image) {
+        super.switchBackdropTo(this.backdrops[image]);
+    }
 }
