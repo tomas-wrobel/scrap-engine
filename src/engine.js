@@ -9,12 +9,12 @@ export class Sprite extends BlockLikeSprite {
      */
     constructor(images) {
         super(null);
-        /** @type {Record<string, string>} */
-        this.costumes = {};
+        /** @type {Record<string, Costume>} */
+        this._costumes = {};
         for (const image in images) {
-            this.costumes[image] = new Costume({image});
-            this.costumes[image].resizeToImage().then(() => {
-                this.addCostume(this.costumes[image]);
+            this._costumes[image] = new Costume({image});
+            this._costumes[image].resizeToImage().then(() => {
+                this.addCostume(this._costumes[image]);
             });
         }
     }
@@ -33,13 +33,11 @@ export class Stage extends BlockLikeStage {
      */
     constructor(images) {
         super(null);
-        /** @type {Record<string, string>} */
-        this.backdrops = {};
+        /** @type {Record<string, Backdrop>} */
+        this._backdrops = {};
         for (const image in images) {
-            this.backdrops[image] = new Backdrop({image});
-            this.backdrops[image].resizeToImage().then(() => {
-                this.addBackdrop(this.backdrops[image]);
-            });
+            this._backdrops[image] = new Backdrop({image});
+            this._backdrops[image].addTo(this);
         }
     }
 
