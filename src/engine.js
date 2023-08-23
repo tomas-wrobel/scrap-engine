@@ -23,7 +23,7 @@ export class Sprite extends BlockLikeSprite {
      * @param {string} image 
      */
     switchCostumeTo(image) {
-        super.switchCostumeTo(this.costumes[image]);
+        super.switchCostumeTo(this._costumes[image]);
     }
 }
 
@@ -45,6 +45,6 @@ export class Stage extends BlockLikeStage {
      * @param {string} image
      */
     switchBackdropTo(image) {
-        super.switchBackdropTo(this.backdrops[image]);
+        super.switchBackdropTo(this._backdrops[image]);
     }
 }
