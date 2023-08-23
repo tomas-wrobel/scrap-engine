@@ -11,19 +11,21 @@ export class Sprite extends BlockLikeSprite {
         super(null);
         /** @type {Record<string, Costume>} */
         this._costumes = {};
-        for (const image in images) {
-            this._costumes[image] = new Costume({image});
-            this._costumes[image].resizeToImage().then(() => {
-                this.addCostume(this._costumes[image]);
+        for (const name in images) {
+            this._costumes[name] = new Costume({
+                image: images[name],
+            });
+            this._costumes[name].resizeToImage().then(() => {
+                this.addCostume(this._costumes[name]);
             });
         }
     }
 
     /**
-     * @param {string} image 
+     * @param {string} name 
      */
-    switchCostumeTo(image) {
-        super.switchCostumeTo(this._costumes[image]);
+    switchCostumeTo(name) {
+        super.switchCostumeTo(this._costumes[name]);
     }
 }
 
@@ -35,16 +37,18 @@ export class Stage extends BlockLikeStage {
         super(null);
         /** @type {Record<string, Backdrop>} */
         this._backdrops = {};
-        for (const image in images) {
-            this._backdrops[image] = new Backdrop({image});
-            this._backdrops[image].addTo(this);
+        for (const name in images) {
+            this._backdrops[name] = new Backdrop({
+                image: images[name],
+            });
+            this._backdrops[name].addTo(this);
         }
     }
 
     /**
-     * @param {string} image
+     * @param {string} name
      */
-    switchBackdropTo(image) {
-        super.switchBackdropTo(this._backdrops[image]);
+    switchBackdropTo(name) {
+        super.switchBackdropTo(this._backdrops[name]);
     }
 }
