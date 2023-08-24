@@ -3,6 +3,8 @@ import BlockLikeStage from "./stage";
 import Backdrop from "./backdrop";
 import Costume from "./costume";
 
+export const isTurbo = frameElement instanceof HTMLIFrameElement && frameElement.dataset.mode === "turbo";
+
 export class Sprite extends BlockLikeSprite {
     /**
      * @param {Record<string, string>} images
@@ -21,6 +23,9 @@ export class Sprite extends BlockLikeSprite {
             this._costumes[name].resizeToImage().then(() => {
                 this.addCostume(this._costumes[name]);
             });
+        }
+        if (isTurbo) {
+            this.pace = 0;
         }
     }
 
@@ -66,6 +71,9 @@ export class Stage extends BlockLikeStage {
                 image: images[name],
             });
             this._backdrops[name].addTo(this);
+        }
+        if (isTurbo) {
+            this.pace = 0;
         }
     }
 
