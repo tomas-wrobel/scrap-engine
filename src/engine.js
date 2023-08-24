@@ -3,7 +3,7 @@ import BlockLikeStage from "./stage";
 import Backdrop from "./backdrop";
 import Costume from "./costume";
 
-export const isTurbo = frameElement instanceof HTMLIFrameElement && frameElement.dataset.mode === "turbo";
+export const isTurbo = frameElement && frameElement.dataset.mode === "turbo";
 
 export class Sprite extends BlockLikeSprite {
     /**
