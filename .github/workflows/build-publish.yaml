@@ -10,6 +10,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
+        with:
+          registry-url: 'https://registry.npmjs.org'
       - run: npm install --no-optional
       - run: npx webpack --progress
       - run: cp src/style.css dist/style.css
