@@ -34,7 +34,7 @@ export class Stage extends BlockLikeStage {
      * @param {Record<string, string>} images
      */
     constructor(images) {
-        super(null);
+        super({sensing: true});
         /** @type {Record<string, Backdrop>} */
         this._backdrops = {};
         for (const name in images) {
