@@ -6,6 +6,7 @@ module.exports = {
         Color: "./src/color.js",
     },
     output: {
+        filename: "[filebase]",
         path: path.resolve(__dirname, "dist"),
         library: {
             name: "[name]",
