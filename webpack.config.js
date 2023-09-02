@@ -1,12 +1,15 @@
 const path = require("path");
 
 module.exports = {
-    entry: "./src/engine.js",
+    entry: {
+        Scrap: "./src/engine.js",
+        Color: "./src/color.js",
+    },
     output: {
         filename: "engine.js",
         path: path.resolve(__dirname, "dist"),
         library: {
-            name: "Scrap",
+            name: "[name]",
             type: "window",
         },
     },
