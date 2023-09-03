@@ -207,6 +207,19 @@ export default class Entity {
         }
     }
 
+    whenMouse(kind, func) {
+        const toEvent = {
+            clicked: "click",
+            pressed: "mousedown",
+            released: "mouseup",
+            left: "mouseleave",
+            entered: "mouseenter",
+            moved: "mousemove",
+            "double-clicked": "dblclick"
+        };
+        this.whenEvent(toEvent[kind], func);
+    }
+
     /**
      * whenReceiveMessage - adds the specified event listener to document.
      * When triggered will invoke user supplied function.
