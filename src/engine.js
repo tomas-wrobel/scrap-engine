@@ -112,4 +112,22 @@ export class Stage extends BlockLikeStage {
     switchBackdropTo(name) {
         super.switchBackdropTo(this._backdrops[name]);
     }
+    /**
+     * @param {string} name
+     */
+    playSound(name) {
+        super.playSound(this._sounds[name]);
+    }
+    /**
+     * @param {string} name
+     */
+    playSoundUntilDone(name) {
+        super.playSoundUntilDone(this._sounds[name]);
+    }
+    /**
+     * @param {string} name
+     */
+    playSoundLoop(name) {
+        super.playSoundLoop(this._sounds[name]);
+    }
 }
