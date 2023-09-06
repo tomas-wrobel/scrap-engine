@@ -39,7 +39,7 @@ export default class Stage extends Entity {
      */
     constructor(options = {}) {
         const defaults = {
-            width: window.innerWidth,
+            width: innerWidth,
             height: innerHeight,
             parent: document.body,
             pace: 33,

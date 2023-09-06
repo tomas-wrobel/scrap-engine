@@ -77,7 +77,7 @@ export default class Sprite extends Entity {
          */
         if (typeof options === "string") {
             actual.costume = new Costume({image: options, width: 0, height: 0});
-            const image = new window.Image();
+            const image = new Image();
 
             const me = actual.costume;
             image.src = options;
@@ -198,7 +198,7 @@ export default class Sprite extends Entity {
      * sprite.whenClicked( function() {
      *   let clone = this.clone();
      *   clone.move(100);
-     *   clone.addTo(stage);
+     * 
      * });
      *
      */
@@ -238,8 +238,11 @@ export default class Sprite extends Entity {
         // set the current costume.
         clone.costume = clone.costumes[currentCostumeIndex];
 
+        // add the clone to the stage.
+        this.stage && clone.addTo(this.stage);
+
         // announce a clone
-        const event = new window.CustomEvent(
+        const event = new CustomEvent(
             `blockLike.spritecloned.${this.id}`,
             {detail: clone}
         );
