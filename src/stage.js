@@ -247,9 +247,8 @@ export default class Stage extends Entity {
         let i = 0;
         this.sprites.forEach(item => {
             const sprite = item;
-            i += 1;
-            sprite.z = i;
-            sprite.element ? sprite.element.update(sprite) : null;
+            sprite.z = ++i;
+            sprite.element && sprite.element.update(sprite);
         });
     }
 

@@ -662,6 +662,22 @@ export default class Sprite extends Entity {
 
     /** Looks * */
 
+    goForward() {
+        this.stage.sendSpriteForward(this);
+    }
+
+    goBackward() {
+        this.stage.sendSpriteBackwards(this);
+    }
+
+    goToFront() {
+        this.stage.sendSpriteToFront(this);
+    }
+
+    goToBack() {
+        this.stage.sendSpriteToBack(this);
+    }
+
     /**
      * _refreshCostume - Sets the costume and sprite width and hight then refreshes element.
      *

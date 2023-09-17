@@ -18,12 +18,17 @@ export default class Entity {
         this.id = this._generateUUID();
         this.pace = pace;
         this.sounds = []; // will hold all sounds currently played by entity, if any.
+        this.clearEffects();
+    }
+
+    clearEffects() {
         this.effects = {
             brightness: 100,
             color: 0,
             ghost: 0,
             grayscale: 0
         };
+        this.element && this.element.update(this);
     }
 
     getCSSFilter() {
