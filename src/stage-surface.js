@@ -46,17 +46,18 @@ export default class StageSurface {
 		} else if (sprite.rotationStyle === 1) {
 			this.context.scale((Math.floor(sprite.direction / 180) * 2 - 1) * -1, 1);
 		}
+		const width = sprite.costume.visibleWidth;
+		const height = sprite.costume.visibleHeight;
 		if (sprite.costume.image) {
 			const image = new Image();
 
 			image.onload = () => {
 				this.context.drawImage(
 					image,
-
-					sprite.stage.width / 2 + sprite.x,
-					sprite.stage.height / 2 + sprite.y * -1,
-					sprite.costume.visibleWidth,
-					sprite.costume.visibleHeight
+					sprite.x - width / 2 + sprite.stage.width / 2,
+					sprite.y * -1 - height / 2 + sprite.stage.height / 2,
+					width,
+					height
 				);
 			};
 
@@ -64,10 +65,10 @@ export default class StageSurface {
 		} else if (sprite.costume.color) {
 			this.context.fillStyle = sprite.costume.color;
 			this.context.fillRect(
-				sprite.stage.width / 2 + sprite.x,
-				sprite.stage.height / 2 + sprite.y * -1,
-				sprite.costume.visibleWidth,
-				sprite.costume.visibleHeight
+				sprite.x - width / 2 + sprite.stage.width / 2,
+				sprite.y * -1 - height / 2 + sprite.stage.height / 2,
+				width,
+				height
 			);
 		}
 
