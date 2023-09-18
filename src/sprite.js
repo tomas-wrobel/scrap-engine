@@ -1163,7 +1163,7 @@ export default class Sprite extends Entity {
      * });
      */
     stamp() {
-        this.surface.stamp(this);
+        return this.surface.stamp(this);
     }
 
     /**
