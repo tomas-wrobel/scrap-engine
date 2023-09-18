@@ -41,39 +41,44 @@ export default class StageSurface {
 		this.context.save();
 		this.context.filter = sprite.getCSSFilter();
 		this.context.globalAlpha = sprite.opacity;
-		if (sprite.rotationStyle === 0) {
-			this.context.rotate((sprite.rotation * Math.PI) / 180);
-		} else if (sprite.rotationStyle === 1) {
+		const {width, height, x, y, stage, rotationStyle} = sprite;
+		if (rotationStyle === 0) {
+			this.context.translate(x + width / 2, -y - height / 2);
+			this.context.rotate((sprite.direction * Math.PI) / 180);
+			this.context.translate(-x - width / 2, y + height / 2);
+		} else if (rotationStyle === 1) {
 			this.context.scale((Math.floor(sprite.direction / 180) * 2 - 1) * -1, 1);
 		}
-		const width = sprite.costume.visibleWidth;
-		const height = sprite.costume.visibleHeight;
 		if (sprite.costume.image) {
 			const image = new Image();
 
-			image.onload = () => {
-				// Draw at the center
-				this.context.drawImage(
-					image,
-					sprite.x - width / 2 + sprite.stage.width / 2,
-					-sprite.y - height / 2 + sprite.stage.height / 2,
-					width,
-					height
-				);
-			};
+			const log = e => console.log(e) || e
+
+			console.log(x, y)
+
+			image.onload = () => this.context.drawImage(
+				image,
+				0,
+				0,
+				image.width,
+				image.height,
+				log(x - width / 2 + stage.width / 2),
+				log(-y - height / 2 + stage.height / 2),
+				width,
+				height
+			);
 
 			image.src = sprite.costume.image;
 		} else if (sprite.costume.color) {
 			this.context.fillStyle = sprite.costume.color;
 			// Draw at the center
 			this.context.fillRect(
-				sprite.x - width / 2 + sprite.stage.width / 2,
-				-sprite.y - height / 2 + sprite.stage.height / 2,
+				x - width / 2 + stage.width / 2,
+				-y - height / 2 + stage.height / 2,
 				width,
 				height
 			);
 		}
-
 		this.context.restore();
 	}
 
