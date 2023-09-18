@@ -34,7 +34,7 @@ export default class StageSurface {
 	/**
 	 * @param {import("./sprite").default} sprite
 	 */
-	stamp(sprite) {
+	async stamp(sprite) {
 		if (!sprite.showing) {
 			return;
 		}
@@ -44,7 +44,7 @@ export default class StageSurface {
 		const {width, height, x, y, stage, rotationStyle} = sprite;
 		if (rotationStyle === 0) {
 			this.context.translate(x + width / 2, -y - height / 2);
-			this.context.rotate((sprite.direction * Math.PI) / 180);
+			this.context.rotate((((sprite.direction - 90 + 360) % 360) * Math.PI) / 180);
 			this.context.translate(-x - width / 2, y + height / 2);
 		} else if (rotationStyle === 1) {
 			this.context.scale((Math.floor(sprite.direction / 180) * 2 - 1) * -1, 1);
@@ -52,23 +52,25 @@ export default class StageSurface {
 		if (sprite.costume.image) {
 			const image = new Image();
 
-			const log = e => console.log(e) || e
+			return new Promise((resolve, reject) => {
+				image.onload = () => {
+					this.context.drawImage(
+						image,
+						0,
+						0,
+						image.width,
+						image.height,
+						x - width / 2 + stage.width / 2,
+						-y - height / 2 + stage.height / 2,
+						width,
+						height
+					);
+					resolve();
+				};
 
-			console.log(x, y)
-
-			image.onload = () => this.context.drawImage(
-				image,
-				0,
-				0,
-				image.width,
-				image.height,
-				log(x - width / 2 + stage.width / 2),
-				log(-y - height / 2 + stage.height / 2),
-				width,
-				height
-			);
-
-			image.src = sprite.costume.image;
+				image.onerror = reject;
+				image.src = sprite.costume.image;
+			});
 		} else if (sprite.costume.color) {
 			this.context.fillStyle = sprite.costume.color;
 			// Draw at the center
