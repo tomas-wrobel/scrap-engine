@@ -52,8 +52,13 @@ export default class StageSurface {
 			const image = new Image();
 
 			image.onload = () => {
+				// Draw at the center
 				this.context.drawImage(
 					image,
+					0,
+					0,
+					image.width,
+					image.height,
 					sprite.x - width / 2 + sprite.stage.width / 2,
 					sprite.y * -1 - height / 2 + sprite.stage.height / 2,
 					width,
@@ -64,6 +69,7 @@ export default class StageSurface {
 			image.src = sprite.costume.image;
 		} else if (sprite.costume.color) {
 			this.context.fillStyle = sprite.costume.color;
+			// Draw at the center
 			this.context.fillRect(
 				sprite.x - width / 2 + sprite.stage.width / 2,
 				sprite.y * -1 - height / 2 + sprite.stage.height / 2,
