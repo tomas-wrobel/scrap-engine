@@ -1150,6 +1150,23 @@ export default class Sprite extends Entity {
     /** Pen * */
 
     /**
+     * stamp - Stamps the sprite on the stage's canvas.
+     * Scrap-exclusive method.
+     * 
+     * @example
+     * let stage = new blockLike.Stage();
+     * let sprite = new blockLike.Sprite();
+     * 
+     * sprite.addTo(stage);
+     * sprite.whenClicked(function() {
+     *  this.stamp();
+     * });
+     */
+    stamp() {
+        this.surface.stamp(this);
+    }
+
+    /**
      * penClear - Clears the drawing surface.
      *
      * @example
