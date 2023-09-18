@@ -65,6 +65,7 @@ export default class StageSurface {
 						width,
 						height
 					);
+					this.context.restore();
 					resolve();
 				};
 
@@ -80,8 +81,10 @@ export default class StageSurface {
 				width,
 				height
 			);
+			this.context.restore();
+		} else {
+			this.context.restore();
 		}
-		this.context.restore();
 	}
 
 	/**
