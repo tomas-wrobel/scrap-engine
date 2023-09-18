@@ -56,7 +56,7 @@ export default class StageSurface {
 				this.context.drawImage(
 					image,
 					sprite.x - width / 2 + sprite.stage.width / 2,
-					sprite.y - height / 2 + sprite.stage.height / 2,
+					-sprite.y - height / 2 + sprite.stage.height / 2,
 					width,
 					height
 				);
@@ -68,7 +68,7 @@ export default class StageSurface {
 			// Draw at the center
 			this.context.fillRect(
 				sprite.x - width / 2 + sprite.stage.width / 2,
-				sprite.y - height / 2 + sprite.stage.height / 2,
+				-sprite.y - height / 2 + sprite.stage.height / 2,
 				width,
 				height
 			);

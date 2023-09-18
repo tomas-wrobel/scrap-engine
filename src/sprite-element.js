@@ -34,7 +34,7 @@ export default class SpriteElement {
         // Convert the center based x coordinate to a left based one.
         const x = sprite.x - sprite.width / 2;
         // Convert the center based y coordinate to a left based one.
-        const y = sprite.y * -1 - sprite.height / 2;
+        const y = -sprite.y - sprite.height / 2;
 
         // Costume
         if (sprite.costume) {
