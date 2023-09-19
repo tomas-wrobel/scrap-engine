@@ -43,9 +43,9 @@ export default class StageSurface {
 		this.context.globalAlpha = sprite.opacity;
 		const {width, height, x, y, stage, rotationStyle} = sprite;
 		if (rotationStyle === 0) {
-			this.context.translate(x + width / 2, -y - height / 2);
+			this.context.translate(x + width / 2, -y - height / 2 + stage.width / 2);
 			this.context.rotate((((sprite.direction - 90 + 360) % 360) * Math.PI) / 180);
-			this.context.translate(-x - width / 2, y + height / 2);
+			this.context.translate(-x - width / 2, y + height / 2 - stage.width / 2);
 		} else if (rotationStyle === 1) {
 			this.context.scale((Math.floor(sprite.direction / 180) * 2 - 1) * -1, 1);
 		}
