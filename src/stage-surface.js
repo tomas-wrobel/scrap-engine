@@ -41,11 +41,16 @@ export default class StageSurface {
 		this.context.save();
 		this.context.filter = sprite.getCSSFilter();
 		this.context.globalAlpha = sprite.opacity;
-		const {width, height, x, y, stage, rotationStyle} = sprite;
+		
+		const {width, height, x, y, stage, rotationStyle, direction} = sprite;
+
+		const imgX = x + stage.width / 2;
+		const imgY = stage.height / 2 - y;
+		const radians = (((direction - 90 + 360) % 360) * Math.PI) / 180;
+
 		if (rotationStyle === 0) {
-			this.context.translate(x + width / 2 + stage.width / 2, -y - height / 2 + stage.height / 2);
-			this.context.rotate((((sprite.direction - 90 + 360) % 360) * Math.PI) / 180);
-			this.context.translate(-x - width / 2 - stage.width, y + height / 2 - stage.height / 2);
+			this.context.translate(imgX, imgY);
+			this.context.rotate(radians);
 		} else if (rotationStyle === 1) {
 			this.context.scale((Math.floor(sprite.direction / 180) * 2 - 1) * -1, 1);
 		}
@@ -60,8 +65,8 @@ export default class StageSurface {
 						0,
 						image.width,
 						image.height,
-						x - width / 2 + stage.width / 2,
-						-y - height / 2 + stage.height / 2,
+						-width / 2,
+						-height / 2,
 						width,
 						height
 					);
@@ -76,8 +81,8 @@ export default class StageSurface {
 			this.context.fillStyle = sprite.costume.color;
 			// Draw at the center
 			this.context.fillRect(
-				x - width / 2 + stage.width / 2,
-				-y - height / 2 + stage.height / 2,
+				-width / 2,
+				-height / 2,
 				width,
 				height
 			);
