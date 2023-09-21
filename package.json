@@ -1,9 +1,10 @@
 {
 	"name": "scrap-engine",
-	"version": "0.4.0",
+	"version": "1.0.0",
 	"description": "Bridging the gap between block programming and JavaScript",
 	"files": [
-		"dist/*"
+		"dist/engine.js",
+		"dist/style.css"
 	],
 	"keywords": [
 		"blocklike",
@@ -22,8 +23,10 @@
 	"main": "dist/engine.js",
 	"license": "MIT",
 	"devDependencies": {
-		"webpack": "^5.38.1",
-		"webpack-cli": "^4.7.2"
+		"webpack": "5.88.2",
+		"webpack-cli": "5.1.4",
+		"ts-loader": "9.4.4",
+		"typescript": "5.2.2"
 	},
 	"repository": {
 		"type": "git",

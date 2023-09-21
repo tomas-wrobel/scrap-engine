@@ -1,7 +1,6 @@
 {
-    "prettier.bracketSpacing": false,
-    "prettier.arrowParens": "avoid",
-    "prettier.tabWidth": 4,
-
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "typescript.format.enable": true,
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingEmptyBraces": false,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
 }
