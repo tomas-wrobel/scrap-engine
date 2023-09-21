@@ -2,7 +2,7 @@ export function stop() {
     window.postMessage("STOP", "*");
 }
 
-export const isTurbo = frameElement!.getAttribute("data-mode") === "turbo";
+export const isTurbo = frameElement?.getAttribute("data-mode") === "turbo";
 
 export class StopError extends Error {
     constructor() {
