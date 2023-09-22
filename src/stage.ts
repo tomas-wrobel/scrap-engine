@@ -42,6 +42,7 @@ export default class Stage extends Entity {
 
         this.pen.canvas.width = this.width;
         this.pen.canvas.height = this.height;
+        this.pen.canvas.style.pointerEvents = "none";
 
         this.pen.canvas.style.position = "absolute";
         this.backdrop.canvas.style.position = "absolute";

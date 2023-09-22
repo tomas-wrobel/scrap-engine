@@ -2,6 +2,16 @@ import {isTurbo} from "./utils";
 import {method} from "./decorators";
 import Messages from "./messages";
 
+const toEvent = {
+    clicked: "click",
+    pressed: "mousedown",
+    released: "mouseup",
+    left: "mouseleave",
+    entered: "mouseenter",
+    moved: "mousemove",
+    "double-clicked": "dblclick",
+};
+
 const messages = new Messages();
 
 abstract class Entity {
@@ -95,22 +105,15 @@ abstract class Entity {
         });
     }
 
-    static readonly toEvent = {
-        clicked: "click",
-        pressed: "mousedown",
-        released: "mouseup",
-        left: "mouseleave",
-        entered: "mouseenter",
-        moved: "mousemove",
-        "double-clicked": "dblclick",
-    };
-
     /**
      * @param event Event to listen for.
      * @param fn Function to execute when the event is triggered.
      */
-    whenMouse(event: keyof typeof Entity.toEvent, fn: Entity.Callback) {
-        this.element.addEventListener(Entity.toEvent[event], fn.bind(this));
+    whenMouse(event: keyof typeof toEvent, fn: Entity.Callback) {
+        this.element.addEventListener(toEvent[event], e => {
+            fn.call(this);
+            e.stopPropagation();
+        });
     }
 
     /**
