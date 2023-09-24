@@ -1,7 +1,11 @@
 # Scrap Engine
+
+## Scrap Engine v0
+
 Scrap Engine is a modified version of blockLike.js. The main difference is an absence of rewriter. While BlockLike.js rewrites functions, Scrap does not. Scrap Engine is not intended to be used outside of an output of [Scrap](https://github.com/tomas-wrobel/scrap).
 
-If you are interested more, check out [blockLike.js](https://blocklike.org)
+## Scrap Engine v1
+Scrap Engine v1 is a complete rewrite of the Scrap engine, now powered by TypeScript. It aligns with BlockLike.js conventions, leverages decorators for clarity, and embraces async methods for efficiency. A unique feature allows project termination by throwing unhandleable errors, providing control. It's designed exclusively for [Scrap](https://github.com/tomas-wrobel/scrap), ensuring a seamless coding experience.
 
 # BlockLike.js
 

@@ -1,5 +1,5 @@
 import {isTurbo} from "./utils";
-import {method} from "./decorators";
+import {event, method} from "./decorators";
 import Messages from "./messages";
 
 const toEvent = {
@@ -93,11 +93,13 @@ abstract class Entity {
     /**
      * @param fn Function to execute when the entity is fully loaded.
      */
-    whenLoaded(fn: Entity.Callback) {
+    @event
+    async whenLoaded(fn: Entity.Callback) {
         setTimeout(fn.bind(this), 0);
     }
 
-    whenKeyPressed(key: string, fn: Entity.Callback) {
+    @event
+    async whenKeyPressed(key: string, fn: Entity.Callback) {
         window.addEventListener("keydown", e => {
             if (e.key === key) {
                 fn.call(this);
@@ -109,7 +111,8 @@ abstract class Entity {
      * @param event Event to listen for.
      * @param fn Function to execute when the event is triggered.
      */
-    whenMouse(event: keyof typeof toEvent, fn: Entity.Callback) {
+    @event
+    async whenMouse(event: keyof typeof toEvent, fn: Entity.Callback) {
         this.element.addEventListener(toEvent[event], e => {
             fn.call(this);
             e.stopPropagation();
@@ -120,7 +123,8 @@ abstract class Entity {
      * @param msg Event to listen for.
      * @param fn Function to execute when the event is triggered.
      */
-    whenReceiveMessage(msg: string, fn: Entity.Callback) {
+    @event
+    async whenReceiveMessage(msg: string, fn: Entity.Callback) {
         const listenerId = this.generateID();
 
         messages.listeners.push({msg, listenerId});

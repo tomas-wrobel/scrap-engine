@@ -9,10 +9,11 @@ import {StopError} from "./utils";
  * @param _context The context of the method.
  * @returns Decorated method.
  */
-export function paced<K extends string, A extends any[], T, E extends Entity & Record<K, (...args: A) => Promise<T>>>(target: E, key: K, descriptor: TypedPropertyDescriptor<(this: E, ...args: A) => Promise<T>>) {
-    const fn = target[key];
-
-    descriptor.value = async function (this: E, ...args: A) {
+export function paced<A extends any[], T, E extends Entity>(
+    fn: (this: E, ...args: A) => Promise<T>,
+    _context: ClassMethodDecoratorContext<E, typeof fn>
+) {
+    return async function (this: E, ...args: A) {
         return new Promise<T>((resolve, reject) => {
             const controller = new AbortController();
 
@@ -47,10 +48,11 @@ const STOP = Symbol("STOP");
  * @param _context The context of the method.
  * @returns Decorated method.
  */
-export function method<K extends string, A extends any[], T, E extends Entity & Record<K, (...args: A) => Promise<T>>>(target: E, key: K, descriptor: TypedPropertyDescriptor<(this: E, ...args: A) => Promise<T>>) {
-    const fn = target[key];
-
-    descriptor.value = async function (this: E, ...args: A) {
+export function method<A extends any[], T, E extends Entity>(
+    fn: (this: E, ...args: A) => Promise<T>, 
+    _context: ClassMethodDecoratorContext<E, typeof fn>
+) {
+    return async function (this: E, ...args: A) {
         const controller = new AbortController();
 
         const result = await Promise.race([
@@ -77,3 +79,17 @@ export function method<K extends string, A extends any[], T, E extends Entity & 
         return result;
     };
 }
+
+/**
+ * This decorator is used to decorate events of the Entity class,
+ * which should be used directly by the user.
+ * Note: This decorator does not do anything, it is only used for
+ * type checking and to make the code more readable.
+ * @param method The method to decorate.
+ * @param _context The context of the method.
+ * @returns Decorated method.
+ */
+export function event<A extends [...any[], Entity.Callback], E extends Entity>(
+    fn: (this: E, ...args: A) => Promise<void>,
+    _context: ClassMethodDecoratorContext<E, typeof fn>
+) {}

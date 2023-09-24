@@ -1,4 +1,4 @@
-import { method } from "./decorators";
+import { event, method } from "./decorators";
 import Entity from "./entity";
 import type Sprite from "./sprite";
 
@@ -105,7 +105,8 @@ export default class Stage extends Entity {
         this.flag.parentElement!.style.display = hasFlag ? "block" : "none";
     }
 
-    whenFlag(fn: Entity.Callback) {
+    @event
+    async whenFlag(fn: Entity.Callback) {
         this.toggleFlag(true);
 
         this.flag.addEventListener(

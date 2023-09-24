@@ -2,7 +2,7 @@ import Costume from "./costume";
 import Entity from "./entity";
 import type Stage from "./stage";
 import TextUI from "./textui";
-import {method, paced} from "./decorators";
+import {event, method, paced} from "./decorators";
 import {StopError} from "./utils";
 import {target} from "./form";
 
@@ -60,7 +60,8 @@ export default class Sprite extends Entity {
         this.update();
     }
 
-    whenLoaded(fn: Entity.Callback): void {
+    @event
+    async whenLoaded(fn: Entity.Callback) {
         if (this.done) {
             fn.call(this);
         } else {
@@ -109,7 +110,8 @@ export default class Sprite extends Entity {
         this.stage = stage;
     }
 
-    whenFlag(fn: Entity.Callback) {
+    @event
+    async whenFlag(fn: Entity.Callback) {
         this.stage.toggleFlag(true);
 
         this.stage.flag.addEventListener(
@@ -150,7 +152,8 @@ export default class Sprite extends Entity {
         return clone;
     }
 
-    whenCloned(fn: Entity.Callback) {
+    @event
+    async whenCloned(fn: Entity.Callback) {
         document.addEventListener("ScrapSpriteClone", e => {
             if (e.detail.id === this.id) {
                 fn.call(e.detail);
@@ -269,7 +272,8 @@ export default class Sprite extends Entity {
 
     @paced
     async pointTowards(sprite: Sprite) {
-        this.direction = Sprite.computeDirectionTo(this.x, this.y, sprite.x, sprite.y); this.update();
+        this.direction = Sprite.computeDirectionTo(this.x, this.y, sprite.x, sprite.y);
+        this.update();
     }
 
     private static computeDirectionTo(fromX: number, fromY: number, toX: number, toY: number) {
