@@ -31,8 +31,8 @@ abstract class Entity {
     audios: HTMLAudioElement[] = [];
     protected current: string;
 
-    constructor(readonly images: Record<string, string>, readonly sounds: Record<string, string>) {
-        this.current = Object.keys(images)[0];
+    constructor(readonly images: Entity.Assets, readonly sounds: Entity.Assets, current: number) {
+        this.current = Object.keys(images)[current];
     }
 
     protected generateID() {
@@ -251,6 +251,10 @@ abstract class Entity {
 declare namespace Entity {
     interface Callback {
         (this: Entity): Promise<void>;
+    }
+
+    interface Assets {
+        [name: string]: string;
     }
 }
 

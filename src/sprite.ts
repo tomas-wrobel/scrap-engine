@@ -31,8 +31,8 @@ export default class Sprite extends Entity {
 
     textUi?: TextUI;
 
-    constructor(images: Record<string, string>, readonly sounds: Record<string, string>) {
-        super(images, sounds);
+    constructor(images: Entity.Assets, readonly sounds: Entity.Assets, current = 0) {
+        super(images, sounds, current);
         this.img.src = this.images[this.current];
 
         for (const key in this.images) {

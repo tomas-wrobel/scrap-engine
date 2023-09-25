@@ -18,8 +18,8 @@ export default class Stage extends Entity {
     ctx = document.createElement("canvas").getContext("2d")!;
     pen = document.createElement("canvas").getContext("2d")!;
 
-    constructor(images: Record<string, string>, sounds: Record<string, string>) {
-        super(images, sounds);
+    constructor(images: Entity.Assets, sounds: Entity.Assets, current = 0) {
+        super(images, sounds, current);
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;
