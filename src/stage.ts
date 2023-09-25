@@ -15,7 +15,7 @@ export default class Stage extends Entity {
     mouseX = 0;
     mouseY = 0;
 
-    backdrop = document.createElement("canvas").getContext("2d")!;
+    ctx = document.createElement("canvas").getContext("2d")!;
     pen = document.createElement("canvas").getContext("2d")!;
 
     constructor(images: Record<string, string>, sounds: Record<string, string>) {
@@ -37,15 +37,15 @@ export default class Stage extends Entity {
         this.flag.className = "blocklike-flag";
         this.flag.innerHTML = "&#9873;";
 
-        this.backdrop.canvas.width = this.width;
-        this.backdrop.canvas.height = this.height;
+        this.ctx.canvas.width = this.width;
+        this.ctx.canvas.height = this.height;
 
         this.pen.canvas.width = this.width;
         this.pen.canvas.height = this.height;
         this.pen.canvas.style.pointerEvents = "none";
 
         this.pen.canvas.style.position = "absolute";
-        this.backdrop.canvas.style.position = "absolute";
+        this.ctx.canvas.style.position = "absolute";
 
         const flag = document.createElement("div");
         flag.style.width = `${this.width}px`;
@@ -56,7 +56,7 @@ export default class Stage extends Entity {
         flag.style.display = "none";
         flag.appendChild(this.flag);
 
-        this.element.appendChild(this.backdrop.canvas);
+        this.element.appendChild(this.ctx.canvas);
         this.element.appendChild(this.pen.canvas);
         this.element.appendChild(flag);
 
@@ -94,8 +94,8 @@ export default class Stage extends Entity {
         const img = new Image();
 
         img.onload = () => {
-            this.backdrop.filter = this.toFilter();
-            this.backdrop.drawImage(img, 0, 0, this.width, this.height);
+            this.ctx.filter = this.toFilter();
+            this.ctx.drawImage(img, 0, 0, this.width, this.height);
         };
 
         img.src = src;
@@ -178,5 +178,9 @@ export default class Stage extends Entity {
     @method
     async isKeyPressed(key: string) {
         return this.keys.includes(key);
+    }
+
+    get backdrop() {
+        return this.current;
     }
 }

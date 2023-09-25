@@ -25,7 +25,7 @@ export default class Sprite extends Entity {
     rotationStyle: 0 | 1 | 2 = 0;
 
     // Pen
-    drawing = false;
+    isPenDown = false;
     penSize = 1;
     penColor = "#222222";
 
@@ -169,7 +169,7 @@ export default class Sprite extends Entity {
         this.x = x;
         this.y = y;
 
-        if (this.drawing) {
+        if (this.isPenDown) {
             this.stage.pen.beginPath();
             this.stage.pen.moveTo(this.stage.width / 2 + this.x, this.stage.height / 2 + this.y * -1);
             this.stage.pen.lineTo(this.stage.width / 2 + prevX, this.stage.height / 2 + prevY * -1);
@@ -511,12 +511,12 @@ export default class Sprite extends Entity {
 
     @method
     async penDown() {
-        this.drawing = true;
+        this.isPenDown = true;
     }
 
     @method
     async penUp() {
-        this.drawing = false;
+        this.isPenDown = false;
     }
 
     @method
@@ -536,10 +536,7 @@ export default class Sprite extends Entity {
 
     @method
     async distanceTo(x: number, y: number) {
-        const dx = this.x - x;
-        const dy = this.y - y;
-
-        return Math.sqrt(dx * dx + dy * dy);
+        return Math.sqrt((this.x - x) ** 2 + (this.y - y) ** 2);
     }
 
     @method
@@ -592,7 +589,7 @@ export default class Sprite extends Entity {
         const x = Math.round(this.x - this.stage.width / 2);
         const y = Math.round(this.stage.height / 2 - this.y);
 
-        const {data} = this.stage.backdrop.getImageData(x, y, width, height);
+        const {data} = this.stage.ctx.getImageData(x, y, width, height);
 
         const r = Number.parseInt(color.slice(1, 3), 16);
         const g = Number.parseInt(color.slice(3, 5), 16);
@@ -622,5 +619,9 @@ export default class Sprite extends Entity {
 
     get mouseDown() {
         return this.stage.mouseDown;
+    }
+
+    get costume() {
+        return this.current;
     }
 }

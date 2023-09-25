@@ -29,7 +29,7 @@ abstract class Entity {
     abstract whenFlag(fn: Entity.Callback): void;
 
     audios: HTMLAudioElement[] = [];
-    current: string;
+    protected current: string;
 
     constructor(readonly images: Record<string, string>, readonly sounds: Record<string, string>) {
         this.current = Object.keys(images)[0];
