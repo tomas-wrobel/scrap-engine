@@ -226,9 +226,24 @@ abstract class Entity {
     @method
     async setVolume(volume: number) {
         this.volume = volume;
+        this.updateVolume();
+    }
 
+    /**
+     * Changes the volume of the
+     * entity and all active
+     * sounds
+     * @param volume 0-100
+     */
+    @method
+    async changeVolume(volume: number) {
+        this.volume += volume;
+        this.updateVolume();
+    }
+
+    private updateVolume() {
         for (const audio of this.audios) {
-            audio.volume = volume / 100;
+            audio.volume = this.volume / 100;
         }
     }
 }
