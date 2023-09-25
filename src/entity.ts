@@ -21,6 +21,7 @@ abstract class Entity {
         ghost: 0,
         grayscale: 0,
     };
+    volume = 100;
 
     pace = isTurbo ? 0 : 33;
 
@@ -187,6 +188,7 @@ abstract class Entity {
     @method
     async playSound(name: string) {
         const audio = new Audio(this.sounds[name]);
+        audio.volume = this.volume / 100;
         this.audios.push(audio);
         audio.play();
 
@@ -204,6 +206,7 @@ abstract class Entity {
     playSoundUntilDone(name: string) {
         return new Promise<void>(resolve => {
             const audio = new Audio(this.sounds[name]);
+            audio.volume = this.volume / 100;
             this.audios.push(audio);
             audio.play();
 
@@ -213,10 +216,25 @@ abstract class Entity {
             };
         });
     }
+
+    /**
+     * Sets the volume of the
+     * entity and all active
+     * sounds
+     * @param volume 0-100
+     */
+    @method
+    async setVolume(volume: number) {
+        this.volume = volume;
+
+        for (const audio of this.audios) {
+            audio.volume = volume / 100;
+        }
+    }
 }
 
 declare namespace Entity {
-    export interface Callback {
+    interface Callback {
         (this: Entity): Promise<void>;
     }
 }
