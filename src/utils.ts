@@ -10,3 +10,11 @@ export class StopError extends Error {
         this.name = "Scrap.StopError";
     }
 }
+
+export const abort = new AbortController();
+
+window.addEventListener("message", e => {
+    if (e.data === "STOP") {
+        abort.abort();
+    }
+});

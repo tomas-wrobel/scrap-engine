@@ -3,7 +3,7 @@ import Entity from "./entity";
 import type Stage from "./stage";
 import TextUI from "./textui";
 import {event, method, paced} from "./decorators";
-import {StopError} from "./utils";
+import {StopError, abort} from "./utils";
 import {target} from "./form";
 
 export default class Sprite extends Entity {
@@ -120,7 +120,7 @@ export default class Sprite extends Entity {
                 fn.call(this);
                 this.stage.toggleFlag(false);
             },
-            {once: true}
+            {once: true, signal: abort.signal}
         );
     }
 
@@ -154,12 +154,16 @@ export default class Sprite extends Entity {
 
     @event
     async whenCloned(fn: Entity.Callback) {
-        document.addEventListener("ScrapSpriteClone", e => {
-            if (e.detail.id === this.id) {
-                fn.call(e.detail);
-                e.stopPropagation();
-            }
-        });
+        document.addEventListener(
+            "ScrapSpriteClone", 
+            e => {
+                if (e.detail.id === this.id) {
+                    fn.call(e.detail);
+                    e.stopPropagation();
+                }
+            },
+            {signal: abort.signal}
+        );
     }
 
     private motion(x: number, y: number) {
@@ -211,10 +215,12 @@ export default class Sprite extends Entity {
 
             window.addEventListener(
                 "message",
-                function stop() {
-                    clearInterval(int);
-                    window.removeEventListener("message", stop);
-                    reject(new StopError());
+                function stop(e) {
+                    if (e.data === "STOP") {
+                        clearInterval(int);
+                        window.removeEventListener("message", stop);
+                        reject(new StopError());
+                    }
                 },
                 {signal: controller.signal}
             );
@@ -448,7 +454,7 @@ export default class Sprite extends Entity {
                     delete this.textUi;
                     resolve(detail);
                 },
-                {once: true}
+                {once: true, signal: abort.signal}
             );
         });
     }

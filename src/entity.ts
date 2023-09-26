@@ -1,4 +1,4 @@
-import {isTurbo} from "./utils";
+import {abort, isTurbo} from "./utils";
 import {event, method} from "./decorators";
 import Messages from "./messages";
 
@@ -101,11 +101,15 @@ abstract class Entity {
 
     @event
     async whenKeyPressed(key: string, fn: Entity.Callback) {
-        window.addEventListener("keydown", e => {
-            if (e.key === key) {
-                fn.call(this);
-            }
-        });
+        window.addEventListener(
+            "keydown", 
+            e => {
+                if (e.key === key) {
+                    fn.call(this);
+                }
+            }, 
+            {signal: abort.signal}
+        );
     }
 
     /**
@@ -114,10 +118,14 @@ abstract class Entity {
      */
     @event
     async whenMouse(event: keyof typeof toEvent, fn: Entity.Callback) {
-        this.element.addEventListener(toEvent[event], e => {
-            fn.call(this);
-            e.stopPropagation();
-        });
+        this.element.addEventListener(
+            toEvent[event], 
+            e => {
+                fn.call(this);
+                e.stopPropagation();
+            },
+            {signal: abort.signal}
+        );
     }
 
     /**
@@ -129,20 +137,24 @@ abstract class Entity {
         const listenerId = this.generateID();
 
         messages.listeners.push({msg, listenerId});
-        messages.addEventListener(msg, e => {
-            const {detail} = e as Messages.Event;
+        messages.addEventListener(
+            msg, 
+            e => {
+                const {detail} = e as Messages.Event;
 
-            fn.call(this).then(() =>
-                document.dispatchEvent(
-                    new CustomEvent("ScrapMessageDone", {
-                        detail: {
-                            listenerId,
-                            msgId: detail,
-                        },
-                    })
-                )
-            );
-        });
+                fn.call(this).then(() =>
+                    document.dispatchEvent(
+                        new CustomEvent("ScrapMessageDone", {
+                            detail: {
+                                listenerId,
+                                msgId: detail,
+                            },
+                        })
+                    )
+                );
+            },
+            {signal: abort.signal}
+        );
     }
 
     /**
@@ -168,16 +180,20 @@ abstract class Entity {
         messages.dispatchEvent(new CustomEvent(msg, {detail: msgId}));
 
         return new Promise<void>(resolve => {
-            document.addEventListener("ScrapMessageDone", function done(e) {
-                if (e.detail.msgId === msgId) {
-                    listeners = listeners.filter(listener => listener.listenerId !== e.detail.listenerId);
+            document.addEventListener(
+                "ScrapMessageDone", 
+                function done(e) {
+                    if (e.detail.msgId === msgId) {
+                        listeners = listeners.filter(listener => listener.listenerId !== e.detail.listenerId);
 
-                    if (!listeners.length) {
-                        document.removeEventListener("ScrapMessageDone", done);
-                        resolve();
+                        if (!listeners.length) {
+                            document.removeEventListener("ScrapMessageDone", done);
+                            resolve();
+                        }
                     }
-                }
-            });
+                }, 
+                {signal: abort.signal}
+            );
         });
     }
 

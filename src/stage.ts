@@ -1,6 +1,7 @@
-import { event, method } from "./decorators";
+import {event, method} from "./decorators";
 import Entity from "./entity";
 import type Sprite from "./sprite";
+import {abort} from "./utils";
 
 export default class Stage extends Entity {
     element = document.createElement("div");
@@ -63,28 +64,48 @@ export default class Stage extends Entity {
         document.body.appendChild(this.element);
 
         // Events
-        window.addEventListener("keydown", e => {
-            if (!this.keys.includes(e.key)) {
-                this.keys.push(e.key);
-            }
-        });
+        window.addEventListener(
+            "keydown",
+            e => {
+                if (!this.keys.includes(e.key)) {
+                    this.keys.push(e.key);
+                }
+            },
+            {signal: abort.signal}
+        );
 
-        window.addEventListener("keyup", e => {
-            this.keys = this.keys.filter(key => key !== e.key);
-        });
+        window.addEventListener(
+            "keyup",
+            e => {
+                this.keys = this.keys.filter(key => key !== e.key);
+            },
+            {signal: abort.signal}
+        );
 
-        this.element.addEventListener("mousemove", e => {
-            this.mouseX = e.clientX - this.width / 2;
-            this.mouseY = e.clientY - this.height / 2;
-        });
+        this.element.addEventListener(
+            "mousemove",
+            e => {
+                this.mouseX = e.clientX - this.width / 2;
+                this.mouseY = e.clientY - this.height / 2;
+            },
+            {signal: abort.signal}
+        );
 
-        this.element.addEventListener("mousedown", () => {
-            this.mouseDown = true;
-        });
+        this.element.addEventListener(
+            "mousedown",
+            () => {
+                this.mouseDown = true;
+            },
+            {signal: abort.signal}
+        );
 
-        this.element.addEventListener("mouseup", () => {
-            this.mouseDown = false;
-        });
+        this.element.addEventListener(
+            "mouseup",
+            () => {
+                this.mouseDown = false;
+            },
+            {signal: abort.signal}
+        );
 
         this.update();
     }
@@ -115,7 +136,7 @@ export default class Stage extends Entity {
                 fn.call(this);
                 this.toggleFlag(false);
             },
-            { once: true }
+            {once: true, signal: abort.signal}
         );
     }
 
