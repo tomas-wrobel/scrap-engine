@@ -1,4 +1,4 @@
-import type Entity from "./entity";
+import Entity from "./entity";
 import {StopError} from "./utils";
 
 /**
@@ -49,7 +49,7 @@ const STOP = Symbol("STOP");
  * @returns Decorated method.
  */
 export function method<A extends any[], T, E extends Entity>(
-    fn: (this: E, ...args: A) => Promise<T>, 
+    fn: (this: E, ...args: A) => Promise<T>,
     _context: ClassMethodDecoratorContext<E, typeof fn>
 ) {
     return async function (this: E, ...args: A) {
@@ -83,8 +83,8 @@ export function method<A extends any[], T, E extends Entity>(
 /**
  * This decorator is used to decorate events of the Entity class,
  * which should be used directly by the user.
- * Note: This decorator does not do anything, it is only used for
- * type checking and to make the code more readable.
+ * The event parameter must be an async function,
+ * taking an Entity.Callback as its last parameter.
  * @param method The method to decorate.
  * @param _context The context of the method.
  * @returns Decorated method.
@@ -92,4 +92,37 @@ export function method<A extends any[], T, E extends Entity>(
 export function event<A extends [...any[], Entity.Callback], E extends Entity>(
     fn: (this: E, ...args: A) => Promise<void>,
     _context: ClassMethodDecoratorContext<E, typeof fn>
-) {}
+) {
+    return function (this: E, ...args: A) {
+        const callback: Entity.Callback = args.pop();
+
+        args.push(
+            async function (this: Entity) {
+                const controller = new AbortController();
+
+                const result = await Promise.race([
+                    callback.call(this),
+                    new Promise<typeof STOP>(
+                        resolve => window.addEventListener(
+                            "message",
+                            e => {
+                                if (e.data === "STOP") {
+                                    resolve(STOP);
+                                }
+                            },
+                            {signal: controller.signal}
+                        )
+                    )
+                ]);
+
+                controller.abort();
+
+                if (result === STOP) {
+                    throw new StopError();
+                }
+            }
+        );
+
+        return fn.apply(this, args);
+    }
+}
