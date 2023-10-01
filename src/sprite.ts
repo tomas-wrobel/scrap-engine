@@ -33,6 +33,7 @@ export default class Sprite extends Entity {
 
     constructor(images: Entity.Assets, readonly sounds: Entity.Assets, current = 0) {
         super(images, sounds, current);
+        this.img.draggable = false;
         this.img.src = this.images[this.current];
 
         for (const key in this.images) {
@@ -49,6 +50,12 @@ export default class Sprite extends Entity {
 
         this.load();
     }
+
+    updateVariables() {
+        this.stage.updateVariables();
+    }
+
+    [Symbol.toStringTag] = "Sprite";
 
     async load() {
         for (const costume of this.costumes.values()) {

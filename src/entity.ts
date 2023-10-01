@@ -1,6 +1,7 @@
 import {abort, isTurbo} from "./utils";
 import {event, method} from "./decorators";
 import Messages from "./messages";
+import {DefaultVariableValues, Variable, VariableType, isVariableType} from "./variables";
 
 const toEvent = {
     clicked: "click",
@@ -15,6 +16,8 @@ const toEvent = {
 const messages = new Messages();
 
 abstract class Entity {
+    readonly variables = new Map<string, Variable>();
+
     effects = {
         brightness: 100,
         color: 0,
@@ -51,6 +54,7 @@ abstract class Entity {
     }
 
     abstract update(): void;
+    abstract updateVariables(): void;
 
     /**
      * @returns CSS filter string.
@@ -261,6 +265,91 @@ abstract class Entity {
         for (const audio of this.audios) {
             audio.volume = this.volume / 100;
         }
+    }
+
+    /**
+     * @param name Name of the variable
+     * @returns the variable
+     */
+    @method
+    async getVariable(name: string) {
+        return this.variables.get(name)!.value;
+    }
+
+    /**
+     * @param name Name of the variable
+     * @param value Value to set the variable to
+     */
+    @method
+    async setVariable(name: string, value: any) {
+        const variable = this.variables.get(name);
+
+        if (!variable) {
+            throw "Variable not declared";
+        }
+
+        if (!isVariableType(variable.type, value)) {
+            throw "Invalid variable type";
+        }
+
+        variable.value = value;
+
+        if (variable.visible) {
+            this.updateVariables();
+        }
+    }
+
+    /**
+     * Declares a variable.
+     * @param name The name of the variable
+     * @param value The value of the variable
+     * @param visible Whether the variable should be visible in the variables pane
+     */
+    @method
+    async declareVariable(name: string, type: VariableType) {
+        this.variables.set(name, {
+            value: DefaultVariableValues[type], 
+            visible: false, type
+        });
+    }
+
+    /**
+     * @param name Name of the variable
+     * @param value Value to change the variable by
+     */
+    @method
+    async changeVariable(name: string, value: number) {
+        const variable = this.variables.get(name)!;
+
+        if (variable.type !== VariableType.Number) {
+            throw "Cannot change non-number variable";
+        }
+
+        variable.value += value;
+
+        if (variable.visible) {
+            this.updateVariables();
+        }
+    }
+
+    /**
+     * @param name Name of the variable to hide
+     */
+    @method
+    async hideVariable(name: string) {
+        const variable = this.variables.get(name)!;
+        variable.visible = false;
+        this.updateVariables();
+    }
+
+    /**
+     * @param name Name of the variable to show
+     */
+    @method
+    async showVariable(name: string) {
+        const variable = this.variables.get(name)!;
+        variable.visible = true;
+        this.updateVariables();
     }
 }
 

@@ -12,10 +12,10 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           registry-url: 'https://registry.npmjs.org'
-      - run: npm install --no-optional
-      - run: npx webpack --progress
+      - run: npm install
+      - run: npm run build
       - run: cp src/style.css dist/style.css
       - run: pr -tmJ dist/Scrap.js dist/Color.js > dist/engine.js
       - run: npm publish
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.BLOCKLIKE_NPM_AUTOMATION }}
+          NODE_AUTH_TOKEN: ${{secrets.BLOCKLIKE_NPM_AUTOMATION}}

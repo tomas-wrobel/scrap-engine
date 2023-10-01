@@ -1,10 +1,11 @@
 import {event, method} from "./decorators";
 import Entity from "./entity";
-import type Sprite from "./sprite";
+import Sprite from "./sprite";
 import {abort} from "./utils";
 
 export default class Stage extends Entity {
     element = document.createElement("div");
+    variableParent = document.createElement("div");
     flag = document.createElement("div");
     sprites: Sprite[] = [];
 
@@ -21,6 +22,7 @@ export default class Stage extends Entity {
 
     constructor(images: Entity.Assets, sounds: Entity.Assets, current = 0) {
         super(images, sounds, current);
+        this.variableParent.classList.add("scrap-variables");
 
         this.element.style.width = `${this.width}px`;
         this.element.style.height = `${this.height}px`;
@@ -59,6 +61,7 @@ export default class Stage extends Entity {
 
         this.element.appendChild(this.ctx.canvas);
         this.element.appendChild(this.pen.canvas);
+        this.element.appendChild(this.variableParent);
         this.element.appendChild(flag);
 
         document.body.appendChild(this.element);
@@ -203,5 +206,90 @@ export default class Stage extends Entity {
 
     get backdrop() {
         return this.current;
+    }
+
+    private *allVariables() {
+        yield* this.variables;
+
+        for (const sprite of this.sprites) {
+            yield* sprite.variables;
+        }
+    }
+
+    private makeWatchVariable(value: unknown): Node | string {
+        if (value instanceof Sprite) {
+            const img = document.createElement("img");
+            img.src = value.images[value.costume];
+            img.style.maxWidth = "50px";
+            img.style.maxHeight = "50px";
+            return img;
+        }
+
+        if (Array.isArray(value)) {
+            if (!value.length) {
+                return "[]";
+            }
+
+            const list = document.createElement("div");
+            list.classList.add("scrap-list");
+            for (let i = 0; i < value.length; i++) {
+                list.appendChild(this.variable(`${i}`, value[i]));
+            }
+            return list;
+        }
+
+        return String(value);
+    }
+
+    private value(dom: Node | string) {
+        const value = document.createElement("div");
+        value.classList.add("scrap-value");
+        value.append(dom);
+        return value;
+    }
+
+    private variable(name: string, value: any) {
+        const div = document.createElement("div");
+        div.classList.add("scrap-variable");
+
+        const span = document.createElement("span");
+        span.textContent = name;
+
+        div.appendChild(span);
+        div.appendChild(this.value(this.makeWatchVariable(value)));
+
+        return div;
+    }
+
+    [Symbol.toStringTag] = "Stage";
+
+    updateVariables() {
+        this.variableParent.innerHTML = "";
+
+        for (const [name, variable] of this.allVariables()) {
+            if (variable.visible) {
+                const div = this.variable(name, variable.value);
+
+                if (variable.type === "Number") {
+                    const slider = document.createElement("input");
+
+                    slider.type = "range";
+                    slider.min = `${variable.value - 100}`;
+                    slider.max = `${variable.value + 100}`;
+                    slider.value = `${variable.value}`;
+                    slider.classList.add("scrap-slider");
+
+                    slider.oninput = () => {
+                        variable.value = Number(slider.value);
+                        div.replaceChild(this.value(this.makeWatchVariable(slider.value)), div.querySelector(".scrap-value")!);
+                    };
+
+                    div.ondblclick = () => div.classList.toggle("has-slider");
+                    div.appendChild(slider);
+                }
+
+                this.variableParent.appendChild(div);
+            }
+        }
     }
 }
