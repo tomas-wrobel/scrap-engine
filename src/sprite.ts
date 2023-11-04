@@ -51,9 +51,6 @@ class Sprite extends Entity {
         this.img.style.position = "absolute";
         this.element.style.position = "absolute";
         this.element.appendChild(this.img);
-
-        this.update();
-        this.load();
     }
 
     updateVariables() {
@@ -62,7 +59,7 @@ class Sprite extends Entity {
 
     [Symbol.toStringTag] = "Sprite";
 
-    async load() {
+    private async load() {
         for (const costume of this.costumes.values()) {
             await costume.load();
         }
@@ -173,6 +170,7 @@ class Sprite extends Entity {
         stage.element.appendChild(this.element);
 
         this.stage = stage;
+        return this.load();
     }
 
     @event
