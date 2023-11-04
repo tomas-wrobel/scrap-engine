@@ -137,7 +137,7 @@ class Sprite extends Entity {
         image.style.width = "100%";
         image.style.height = "100%";
         image.style.position = "absolute";
-        image.style.transform = "translate(1px, 1px)";
+        image.style.transform = "translate(2px, 2px)";
         image.style.filter = "brightness(0) opacity(0.5)";
 
         this.element.insertBefore(image, this.img);
