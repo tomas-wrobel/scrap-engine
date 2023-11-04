@@ -6,7 +6,7 @@ import {event, method, paced} from "./decorators";
 import {StopError, abort} from "./utils";
 import {target} from "./form";
 
-export default class Sprite extends Entity {
+class Sprite extends Entity {
     element = document.createElement("div");
     costumes = new Map<string, Costume>();
     img = new Image();
@@ -17,13 +17,6 @@ export default class Sprite extends Entity {
 
     id = this.generateID();
 
-    x = 0;
-    y = 0;
-    direction = 90;
-    visible = true;
-    size = 100;
-    rotationStyle: 0 | 1 | 2 = 0;
-
     // Pen
     isPenDown = false;
     penSize = 1;
@@ -31,11 +24,22 @@ export default class Sprite extends Entity {
 
     textUi?: TextUI;
 
-    constructor(images: Entity.Assets, readonly sounds: Entity.Assets, current = 0) {
+    constructor(images: Entity.Assets, readonly sounds: Entity.Assets, init: Sprite.Init, current = 0) {
         super(images, sounds, current);
+
         this.img.draggable = false;
         this.img.src = this.images[this.current];
 
+        // Initialize
+        this.x = init.x;
+        this.y = init.y;
+        this.draggable = init.draggable;
+        this.direction = init.direction;
+        this.visible = init.visible;
+        this.size = init.size;
+        this.rotationStyle = init.rotationStyle;
+
+        // Set up costumes
         for (const key in this.images) {
             this.costumes.set(key, new Costume(this.images[key]));
         }
@@ -48,6 +52,7 @@ export default class Sprite extends Entity {
         this.element.style.position = "absolute";
         this.element.appendChild(this.img);
 
+        this.update();
         this.load();
     }
 
@@ -107,7 +112,60 @@ export default class Sprite extends Entity {
             this.element.style.transform = "";
         }
 
+        if (this.draggable) {
+            this.element.addEventListener("mousedown", this, {signal: abort.signal});
+        } else {
+            this.element.removeEventListener("mousedown", this);
+        }
+
         this.textUi?.update();
+    }
+
+    /**
+     * The callback for dragging the sprite.
+     * It's not intended to be called directly.
+     * @param e Inserted by the event listener.
+     */
+    handleEvent(e: MouseEvent) {
+        const {clientX: startX, clientY: startY} = e;
+        const {x, y} = this;
+
+        // Make the sprite appear on top of other sprites
+        this.element.style.zIndex = "100";
+
+        // Create a shadow of the sprite
+        const image = new Image();
+        image.src = this.img.src;
+
+        image.style.width = "100%";
+        image.style.height = "100%";
+        image.style.position = "absolute";
+        image.style.transform = "translate(1px, 1px)";
+        image.style.filter = "brightness(0) opacity(0.5)";
+
+        this.element.insertBefore(image, this.img);
+
+        const mousemove = (e: MouseEvent) => {
+            this.x = x + e.clientX - startX;
+            this.y = y - e.clientY + startY;
+
+            // In case the image is changed
+            // while dragging
+            if (this.img.src !== image.src) {
+                image.src = this.img.src;
+            }
+
+            this.update();
+        };
+
+        const mouseup = () => {
+            window.removeEventListener("mousemove", mousemove);
+            window.removeEventListener("mouseup", mouseup);
+            this.element.removeChild(image);
+        };
+
+        window.addEventListener("mousemove", mousemove);
+        window.addEventListener("mouseup", mouseup);
     }
 
     addTo(stage: Stage) {
@@ -139,17 +197,19 @@ export default class Sprite extends Entity {
 
     @method
     async clone() {
-        const clone = new Sprite(this.images, this.sounds);
+        const clone = new Sprite(this.images, this.sounds, {
+            x: this.x,
+            y: this.y,
+            direction: this.direction,
+            draggable: this.draggable,
+            visible: this.visible,
+            size: this.size,
+            rotationStyle: this.rotationStyle
+        });
 
         clone.id = this.id;
         clone.costumes = this.costumes;
         clone.current = this.current;
-        clone.x = this.x;
-        clone.y = this.y;
-        clone.direction = this.direction;
-        clone.visible = this.visible;
-        clone.size = this.size;
-        clone.rotationStyle = this.rotationStyle;
 
         clone.addTo(this.stage);
         clone.update();
@@ -159,10 +219,16 @@ export default class Sprite extends Entity {
         return clone;
     }
 
+    @method
+    async setDraggable(draggable: boolean) {
+        this.draggable = draggable;
+        this.update();
+    }
+
     @event
     async whenCloned(fn: Entity.Callback) {
         document.addEventListener(
-            "ScrapSpriteClone", 
+            "ScrapSpriteClone",
             e => {
                 if (e.detail.id === this.id) {
                     fn.call(e.detail);
@@ -638,3 +704,19 @@ export default class Sprite extends Entity {
         return this.current;
     }
 }
+
+declare namespace Sprite {
+    interface Init {
+        draggable: boolean;
+        x: number;
+        y: number;
+        direction: number;
+        visible: boolean;
+        size: number;
+        rotationStyle: 0 | 1 | 2;
+    }
+}
+
+interface Sprite extends Sprite.Init {}
+
+export default Sprite;
