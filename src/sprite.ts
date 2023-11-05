@@ -396,6 +396,20 @@ class Sprite extends Entity {
     }
 
     @method
+    async ifOnEdgeBounce() {
+        const edge = this.touchingEdge();
+
+        if (edge) {
+            if (edge === "right" || edge === "left") {
+                this.direction = 180 - this.direction;
+            } else {
+                this.direction = 360 - this.direction;
+            }
+            this.update();
+        }
+    }
+
+    @method
     async goForward() {
         this.stage.sendSpriteForward(this);
     }
@@ -617,8 +631,7 @@ class Sprite extends Entity {
         return Math.sqrt((this.x - x) ** 2 + (this.y - y) ** 2);
     }
 
-    @method
-    async touchingEdge() {
+    private touchingEdge() {
         const width = this.costumes.get(this.current)!.visibleWidth;
         const height = this.costumes.get(this.current)!.visibleHeight;
 
@@ -639,8 +652,8 @@ class Sprite extends Entity {
     }
 
     @method
-    isTouchingEdge() {
-        return this.touchingEdge().then(Boolean);
+    async isTouchingEdge() {
+        return !!this.touchingEdge();
     }
 
     @method
