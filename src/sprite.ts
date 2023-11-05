@@ -392,6 +392,7 @@ class Sprite extends Entity {
         } else {
             this.rotationStyle = style;
         }
+        this.update();
     }
 
     @method
