@@ -382,12 +382,12 @@ class Sprite extends Entity {
     }
 
     @method
-    async setRotationStyle(style: 0 | 1 | 2 | "no" | "left-right" | "all") {
-        if (style === "no") {
+    async setRotationStyle(style: 0 | 1 | 2 | "left-right" | "don't rotate" | "all around") {
+        if (style === "all around") {
             this.rotationStyle = 0;
         } else if (style === "left-right") {
             this.rotationStyle = 1;
-        } else if (style === "all") {
+        } else if (style === "don't rotate") {
             this.rotationStyle = 2;
         } else {
             this.rotationStyle = style;
