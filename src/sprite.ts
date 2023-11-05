@@ -397,16 +397,29 @@ class Sprite extends Entity {
 
     @method
     async ifOnEdgeBounce() {
-        const edge = this.touchingEdge();
+        const nearestEdge = this.touchingEdge();
 
-        if (edge) {
-            if (edge === "right" || edge === "left") {
-                this.direction = 180 - this.direction;
-            } else {
-                this.direction = 360 - this.direction;
-            }
-            this.update();
+        if (!nearestEdge) {
+            return;
         }
+
+        const radians = ((90 - this.direction) * Math.PI) / 180;
+
+        let dx = Math.cos(radians);
+        let dy = -Math.sin(radians);
+        if (nearestEdge === 'left') {
+            dx = Math.max(0.2, Math.abs(dx));
+        } else if (nearestEdge === 'top') {
+            dy = Math.max(0.2, Math.abs(dy));
+        } else if (nearestEdge === 'right') {
+            dx = 0 - Math.max(0.2, Math.abs(dx));
+        } else if (nearestEdge === 'bottom') {
+            dy = 0 - Math.max(0.2, Math.abs(dy));
+        }
+
+        const degrees = Math.atan2(dy, dx) * 180 / Math.PI;
+        this.direction = (360 - degrees + 90) % 360;
+        this.update();
     }
 
     @method
