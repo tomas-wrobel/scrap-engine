@@ -27,6 +27,7 @@ class Sprite extends Entity {
     constructor(images: Entity.Assets, readonly sounds: Entity.Assets, init: Sprite.Init, current = 0) {
         super(images, sounds, current);
 
+        this.img.alt = "";
         this.img.draggable = false;
         this.img.src = this.images[this.current];
 
@@ -662,6 +663,22 @@ class Sprite extends Entity {
         }
 
         return null;
+    }
+
+    @method
+    async isTouchingMouse() {
+        const width = this.costumes.get(this.current)!.visibleWidth;
+        const height = this.costumes.get(this.current)!.visibleHeight;
+
+        const x = Math.round(this.x - this.stage.width / 2);
+        const y = Math.round(this.stage.height / 2 - this.y);
+
+        return (
+            this.stage.mouseX >= x - width / 2 &&
+            this.stage.mouseX <= x + width / 2 &&
+            this.stage.mouseY >= y - height / 2 &&
+            this.stage.mouseY <= y + height / 2
+        );
     }
 
     @method
