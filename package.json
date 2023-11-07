@@ -1,6 +1,6 @@
 {
 	"name": "scrap-engine",
-	"version": "1.7.0",
+	"version": "1.7.1",
 	"description": "Bridging the gap between block programming and JavaScript",
 	"files": [
 		"dist/engine.js",
@@ -17,8 +17,8 @@
 		"scrap"
 	],
 	"author": {
-		"name": "Ron Ilan",
-		"url": "http://www.ronilan.com"
+		"name": "Tomáš Wróbel",
+		"url": "https://tomaswrobel.dev"
 	},
 	"main": "dist/engine.js",
 	"license": "MIT",
@@ -36,5 +36,5 @@
 		"type": "git",
 		"url": "https://github.com/tomas-wrobel/scrap.git"
 	},
-	"homepage": "https://scrap-blocks.web.app"
+	"homepage": "https://scrap.tomaswrobel.dev"
 }

@@ -109,7 +109,7 @@ abstract class Entity {
         window.addEventListener(
             "keydown", 
             e => {
-                if (e.key === key) {
+                if (key === "any" || e.key === key) {
                     fn.call(this);
                 }
             }, 

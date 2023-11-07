@@ -143,12 +143,14 @@ export default class Stage extends Entity {
         );
     }
 
-    switchBackdropTo(name: string) {
+    @method
+    async switchBackdropTo(name: string) {
         this.current = name;
         this.update();
     }
 
-    nextBackdrop() {
+    @method
+    async nextBackdrop() {
         const backdrops = Object.keys(this.images);
         const index = backdrops.indexOf(this.current);
         const next = backdrops[index + 1] ?? backdrops[0];
@@ -201,6 +203,9 @@ export default class Stage extends Entity {
 
     @method
     async isKeyPressed(key: string) {
+        if (key === "any") {
+            return !!this.keys.length;
+        }
         return this.keys.includes(key);
     }
 
@@ -222,6 +227,7 @@ export default class Stage extends Entity {
             img.src = value.images[value.costume];
             img.style.maxWidth = "50px";
             img.style.maxHeight = "50px";
+            img.alt = "";
             return img;
         }
 
@@ -236,6 +242,10 @@ export default class Stage extends Entity {
                 list.appendChild(this.variable(`${i}`, value[i]));
             }
             return list;
+        }
+
+        if (value instanceof Date) {
+            return value.toLocaleDateString();
         }
 
         return String(value);
@@ -261,9 +271,7 @@ export default class Stage extends Entity {
         return div;
     }
 
-    [Symbol.toStringTag] = "Stage";
-
-    updateVariables() {
+    override updateVariables() {
         this.variableParent.innerHTML = "";
 
         for (const [name, variable] of this.allVariables()) {
@@ -292,4 +300,6 @@ export default class Stage extends Entity {
             }
         }
     }
+
+    [Symbol.toStringTag] = "Stage";
 }

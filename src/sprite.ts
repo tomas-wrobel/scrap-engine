@@ -54,12 +54,6 @@ class Sprite extends Entity {
         this.element.appendChild(this.img);
     }
 
-    updateVariables() {
-        this.stage.updateVariables();
-    }
-
-    [Symbol.toStringTag] = "Sprite";
-
     private async load() {
         for (const costume of this.costumes.values()) {
             await costume.load();
@@ -727,6 +721,9 @@ class Sprite extends Entity {
 
     @method
     async isKeyPressed(key: string) {
+        if (key === "any") {
+            return !!this.stage.keys.length;
+        }
         return this.stage.keys.includes(key);
     }
 
@@ -745,6 +742,12 @@ class Sprite extends Entity {
     get costume() {
         return this.current;
     }
+
+    override updateVariables() {
+        this.stage.updateVariables();
+    }
+
+    [Symbol.toStringTag] = "Sprite";
 }
 
 declare namespace Sprite {
