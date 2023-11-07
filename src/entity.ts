@@ -14,6 +14,7 @@ const toEvent = {
 };
 
 const messages = new Messages();
+let timer = Date.now();
 
 abstract class Entity {
     readonly variables = new Map<string, Variable>();
@@ -350,6 +351,16 @@ abstract class Entity {
         const variable = this.variables.get(name)!;
         variable.visible = true;
         this.updateVariables();
+    }
+
+    @method
+    async getTimer() {
+        return (Date.now() - timer) / 1000;
+    }
+
+    @method
+    async resetTimer() {
+        timer = Date.now();
     }
 }
 
