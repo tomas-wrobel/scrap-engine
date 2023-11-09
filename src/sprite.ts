@@ -747,6 +747,22 @@ class Sprite extends Entity {
         this.stage.updateVariables();
     }
 
+    override setVariable(name: string, value: any) {
+        if (this.stage.variables.has(name)) {
+            return this.stage.setVariable(name, value);
+        } else {
+            return super.setVariable(name, value);
+        }
+    }
+
+    override getVariable(name: string) {
+        if (this.stage.variables.has(name)) {
+            return this.stage.getVariable(name);
+        } else {
+            return super.getVariable(name);
+        }
+    }
+    
     [Symbol.toStringTag] = "Sprite";
 }
 
