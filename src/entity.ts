@@ -2,6 +2,7 @@ import {abort, isTurbo} from "./utils";
 import {event, method} from "./decorators";
 import Messages from "./messages";
 import {DefaultVariableValues, Variable, VariableType, isVariableType} from "./variables";
+import Timer from "./timer";
 
 const toEvent = {
     clicked: "click",
@@ -14,7 +15,7 @@ const toEvent = {
 };
 
 const messages = new Messages();
-let timer = Date.now();
+const timer = new Timer();
 
 abstract class Entity {
     readonly variables = new Map<string, Variable>();
@@ -355,12 +356,17 @@ abstract class Entity {
 
     @method
     async getTimer() {
-        return (Date.now() - timer) / 1000;
+        return (Date.now() - timer.now) / 1000;
     }
 
     @method
     async resetTimer() {
-        timer = Date.now();
+        timer.reset();
+    }
+
+    @event
+    async whenTimerElapsed(seconds: number, fn: Entity.Callback) {
+        timer.whenElapsed(seconds * 1000, fn.bind(this));
     }
 }
 
