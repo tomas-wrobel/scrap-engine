@@ -5,22 +5,20 @@ class Timer {
     reset() {
         this.now = Date.now();
 
-        for (const [id, time, callback] of this.listeners) {
-            window.clearTimeout(id);
-            window.setTimeout(callback, time);
+        for (const data of this.listeners) {
+            window.clearTimeout(data[0]);
+            data[0] = window.setTimeout(
+                data[2],
+                data[1] - (Date.now() - this.now)
+            );
         }
     }
 
     whenElapsed(time: number, callback: () => Promise<void>) {
-        const handler = () => {
-            this.listeners = this.listeners.filter(
-                ([,,callback]) => callback !== handler
-            );
-            callback();
-        };
-
-        const id = window.setTimeout(handler, time);
-        this.listeners.push([id, time, handler]);
+        this.listeners.push([
+            window.setTimeout(callback, time - (Date.now() - this.now)), 
+            time, callback
+        ]);
     }
 }
 
