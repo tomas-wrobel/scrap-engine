@@ -651,17 +651,13 @@ class Sprite extends Entity {
 
     @method
     async isTouchingMouse() {
-        const width = this.costumes.get(this.current)!.width * (this.size / 100);
-        const height = this.costumes.get(this.current)!.height * (this.size / 100);
-
-        const x = Math.round(this.x - this.stage.width / 2);
-        const y = Math.round(this.stage.height / 2 - this.y);
+        const {width, height, x, y, mouseX, mouseY} = this;
 
         return (
-            this.stage.mouseX >= x - width / 2 &&
-            this.stage.mouseX <= x + width / 2 &&
-            this.stage.mouseY >= y - height / 2 &&
-            this.stage.mouseY <= y + height / 2
+            mouseX > x - width / 2 &&
+            mouseX < x + width / 2 &&
+            mouseY > y - height / 2 &&
+            mouseY < y + height / 2
         );
     }
 
