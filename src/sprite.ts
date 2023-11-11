@@ -340,7 +340,11 @@ class Sprite extends Entity {
 
     @paced
     async pointInDirection(direction: number) {
-        this.direction = direction;
+        if (direction > 0) {
+            this.direction = direction % 360;
+        } else {
+            this.direction = (direction + (360 * 10)) % 360;
+        }
         this.update();
     }
 
