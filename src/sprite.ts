@@ -739,7 +739,11 @@ class Sprite extends Entity {
         return this.stage.mouseDown;
     }
 
-    get costume() {
+    get costumeNumber() {
+        return [...this.costumes.keys()].indexOf(this.current);
+    }
+
+    get costumeName() {
         return this.current;
     }
 

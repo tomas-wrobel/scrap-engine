@@ -209,8 +209,12 @@ export default class Stage extends Entity {
         return this.keys.includes(key);
     }
 
-    get backdrop() {
+    get backdropName() {
         return this.current;
+    }
+
+    get backdropNumber() {
+        return Object.keys(this.images).indexOf(this.current);
     }
 
     private *allVariables() {
@@ -224,7 +228,7 @@ export default class Stage extends Entity {
     private makeWatchVariable(value: unknown): Node | string {
         if (value instanceof Sprite) {
             const img = document.createElement("img");
-            img.src = value.images[value.costume];
+            img.src = value.images[value.costumeNumber];
             img.style.maxWidth = "50px";
             img.style.maxHeight = "50px";
             img.alt = "";
