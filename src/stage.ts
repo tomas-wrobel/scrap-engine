@@ -14,8 +14,8 @@ export default class Stage extends Entity {
 
     keys: string[] = [];
     mouseDown = false;
-    mouseX = 0;
-    mouseY = 0;
+    mouseX = NaN;
+    mouseY = NaN;
 
     ctx = document.createElement("canvas").getContext("2d")!;
     pen = document.createElement("canvas").getContext("2d")!;
