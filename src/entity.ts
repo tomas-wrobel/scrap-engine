@@ -322,12 +322,13 @@ abstract class Entity {
     @method
     async changeVariable(name: string, value: number) {
         const variable = this.variables.get(name)!;
+        const number = Number(variable.value);
 
-        if (variable.type !== VariableType.Number) {
-            throw "Cannot change non-number variable";
+        if (isNaN(number)) {
+            throw new TypeError("Cannot change non-number variable");
         }
 
-        variable.value += value;
+        variable.value = number + value;
 
         if (variable.visible) {
             this.updateVariables();
