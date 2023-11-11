@@ -165,6 +165,8 @@ class Sprite extends Entity {
         stage.element.appendChild(this.element);
 
         this.stage = stage;
+        this.switchBackdropTo = stage.switchBackdropTo.bind(stage);
+
         return this.load();
     }
 
@@ -204,7 +206,7 @@ class Sprite extends Entity {
         clone.costumes = this.costumes;
         clone.current = this.current;
 
-        clone.addTo(this.stage);
+        await clone.addTo(this.stage);
         clone.update();
 
         document.dispatchEvent(new CustomEvent("ScrapSpriteClone", {detail: clone}));

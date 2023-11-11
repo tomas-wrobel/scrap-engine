@@ -145,17 +145,13 @@ export default class Stage extends Entity {
 
     @method
     async switchBackdropTo(name: string) {
+        const detail = this.generateID();
         this.current = name;
+        this.getBackdrops().dispatchEvent(
+            new CustomEvent(name, {detail})
+        );
         this.update();
-    }
-
-    @method
-    async nextBackdrop() {
-        const backdrops = Object.keys(this.images);
-        const index = backdrops.indexOf(this.current);
-        const next = backdrops[index + 1] ?? backdrops[0];
-
-        this.switchBackdropTo(next);
+        return detail;
     }
 
     private refreshSprites() {

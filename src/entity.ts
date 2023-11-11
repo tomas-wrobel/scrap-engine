@@ -14,6 +14,7 @@ const toEvent = {
     "double-clicked": "dblclick",
 };
 
+const backdrops = new Messages();
 const messages = new Messages();
 const timer = new Timer();
 
@@ -31,7 +32,7 @@ abstract class Entity {
     pace = isTurbo ? 0 : 33;
 
     abstract element: HTMLElement;
-    abstract whenFlag(fn: Entity.Callback): void;
+    abstract whenFlag(fn: Entity.Callback): Promise<void>;
 
     audios: HTMLAudioElement[] = [];
     protected current: string;
@@ -42,6 +43,10 @@ abstract class Entity {
 
     protected generateID() {
         return Date.now().toString(36);
+    }
+
+    protected getBackdrops() {
+        return backdrops;
     }
 
     /**
@@ -184,6 +189,83 @@ abstract class Entity {
         let listeners = messages.listeners.filter(listener => listener.msg === msg);
 
         messages.dispatchEvent(new CustomEvent(msg, {detail: msgId}));
+
+        return new Promise<void>(resolve => {
+            document.addEventListener(
+                "ScrapMessageDone", 
+                function done(e) {
+                    if (e.detail.msgId === msgId) {
+                        listeners = listeners.filter(listener => listener.listenerId !== e.detail.listenerId);
+
+                        if (!listeners.length) {
+                            document.removeEventListener("ScrapMessageDone", done);
+                            resolve();
+                        }
+                    }
+                }, 
+                {signal: abort.signal}
+            );
+        });
+    }
+
+    /**
+     * Switches the backdrop to the specified backdrop.
+     * @param name Name of the backdrop
+     * @returns the id of the listeners
+     */
+    async switchBackdropTo(_name: string): Promise<string> {
+        throw new Error("Not implemented");
+    }
+
+    @method
+    async nextBackdrop() {
+        const backdrops = Object.keys(this.images);
+        const index = backdrops.indexOf(this.current);
+        const next = backdrops[index + 1] ?? backdrops[0];
+
+        this.switchBackdropTo(next);
+    }
+
+    /**
+     * Listens for a backdrop change.
+     * @param name Name of the backdrop to listen for
+     * @param fn Function to execute when the backdrop changes
+     */
+    @event
+    async whenBackdropChangesTo(name: string, fn: Entity.Callback) {
+        const listenerId = this.generateID();
+
+        backdrops.listeners.push({msg: name, listenerId});
+        backdrops.addEventListener(
+            name,
+            e => {
+                const {detail} = e as Messages.Event;
+
+                fn.call(this).then(() =>
+                    document.dispatchEvent(
+                        new CustomEvent("ScrapMessageDone", {
+                            detail: {
+                                listenerId,
+                                msgId: detail,
+                            },
+                        })
+                    )
+                );
+            },
+            {signal: abort.signal}
+        );
+    }
+
+    /**
+     * Switch to backdrop and wait for all listeners to finish executing.
+     * @param name Name of the backdrop
+     * @returns a promise that resolves when all listeners have finished executing
+     */
+    @method
+    async switchBackdropToWait(name: string) {
+        let listeners = backdrops.listeners.filter(listener => listener.msg === name);
+
+        const msgId = await this.switchBackdropTo(name);
 
         return new Promise<void>(resolve => {
             document.addEventListener(
