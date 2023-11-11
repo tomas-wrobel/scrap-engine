@@ -80,11 +80,11 @@ class Sprite extends Entity {
             this.img.src = costume.src;
         }
 
-        const x = this.x - costume.visibleWidth / 2;
-        const y = -this.y - costume.visibleHeight / 2;
+        const x = this.x - this.width / 2;
+        const y = -this.y - this.height / 2;
 
-        this.element.style.width = `${costume.visibleWidth}px`;
-        this.element.style.height = `${costume.visibleHeight}px`;
+        this.element.style.width = `${this.width}px`;
+        this.element.style.height = `${this.height}px`;
         this.element.style.filter = this.toFilter();
 
         this.element.style.left = `${x + this.stage.width / 2}px`;
@@ -467,25 +467,16 @@ class Sprite extends Entity {
         this.update();
     }
 
-    private refreshSize() {
-        for (const costume of this.costumes.values()) {
-            costume.visibleWidth = costume.width * this.size / 100;
-            costume.visibleHeight = costume.height * this.size / 100;
-        }
-
-        this.update();
-    }
-
     @paced
     async setSize(size: number) {
         this.size = size;
-        this.refreshSize();
+        this.update();
     }
 
     @paced
     async changeSize(size: number) {
         this.size += size;
-        this.refreshSize();
+        this.update();
     }
 
     @method
@@ -573,10 +564,7 @@ class Sprite extends Entity {
             this.stage.pen.save();
             this.stage.pen.filter = this.toFilter();
 
-            const {x, y, stage, rotationStyle, direction} = this;
-
-            const width = costume.visibleWidth;
-            const height = costume.visibleHeight;
+            const {x, y, stage, rotationStyle, direction, width, height} = this;
 
             const imgX = x + stage.width / 2;
             const imgY = stage.height / 2 - y;
@@ -643,19 +631,18 @@ class Sprite extends Entity {
     }
 
     private touchingEdge() {
-        const width = this.costumes.get(this.current)!.visibleWidth;
-        const height = this.costumes.get(this.current)!.visibleHeight;
+        const {width, height, x, y} = this;
 
-        if (this.x + width / 2 > this.stage.width / 2) {
+        if (x + width / 2 > this.stage.width / 2) {
             return "right";
         }
-        if (this.x - width / 2 < -1 * (this.stage.width / 2)) {
+        if (x - width / 2 < -1 * (this.stage.width / 2)) {
             return "left";
         }
-        if (this.y + height / 2 > this.stage.height / 2) {
+        if (y + height / 2 > this.stage.height / 2) {
             return "top";
         }
-        if (this.y - height / 2 < -1 * (this.stage.height / 2)) {
+        if (y - height / 2 < -1 * (this.stage.height / 2)) {
             return "bottom";
         }
 
@@ -664,8 +651,8 @@ class Sprite extends Entity {
 
     @method
     async isTouchingMouse() {
-        const width = this.costumes.get(this.current)!.visibleWidth;
-        const height = this.costumes.get(this.current)!.visibleHeight;
+        const width = this.costumes.get(this.current)!.width * (this.size / 100);
+        const height = this.costumes.get(this.current)!.height * (this.size / 100);
 
         const x = Math.round(this.x - this.stage.width / 2);
         const y = Math.round(this.stage.height / 2 - this.y);
@@ -685,11 +672,8 @@ class Sprite extends Entity {
 
     @method
     async isTouching(sprite: Sprite) {
-        const width = this.costumes.get(this.current)!.visibleWidth;
-        const height = this.costumes.get(this.current)!.visibleHeight;
-
-        const spriteWidth = sprite.costumes.get(sprite.current)!.visibleWidth;
-        const spriteHeight = sprite.costumes.get(sprite.current)!.visibleHeight;
+        const {width, height} = this;
+        const {width: spriteWidth, height: spriteHeight} = sprite;
 
         return (
             this.x + width / 2 > sprite.x - spriteWidth / 2 &&
@@ -701,8 +685,7 @@ class Sprite extends Entity {
 
     @method
     async isTouchingBackdropColor(color: string) {
-        const width = this.costumes.get(this.current)!.visibleWidth;
-        const height = this.costumes.get(this.current)!.visibleHeight;
+        const {width, height} = this;
 
         const x = Math.round(this.x - this.stage.width / 2);
         const y = Math.round(this.stage.height / 2 - this.y);
@@ -753,7 +736,15 @@ class Sprite extends Entity {
     override updateVariables() {
         this.stage.updateVariables();
     }
-    
+
+    get width() {
+        return this.costumes.get(this.current)!.width * (this.size / 100);
+    }
+
+    get height() {
+        return this.costumes.get(this.current)!.height * (this.size / 100);
+    }
+
     [Symbol.toStringTag] = "Sprite";
 }
 

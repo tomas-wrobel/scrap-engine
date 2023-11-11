@@ -7,16 +7,13 @@ export default class TextUI {
     constructor(sprite: Sprite, type: "say" | "think", text: string);
 
     constructor(readonly sprite: Sprite, readonly type: "ask" | "think" | "say", readonly text: string, askId?: string) {
-        const width = sprite.costumes.get(sprite.costumeName)!.visibleWidth;
-        const height = sprite.costumes.get(sprite.costumeName)!.visibleHeight;
-
-        const x = sprite.x - width / 2;
-        const y = -sprite.y - height / 2;
+        const x = sprite.x - sprite.width / 2;
+        const y = -sprite.y - sprite.height / 2;
 
         this.element.style.position = "absolute";
         this.element.append(text, document.createElement("br"));
 
-        this.element.style.left = `${(sprite.stage.width / 2) + x + (width * 0.6)}px`;
+        this.element.style.left = `${(sprite.stage.width / 2) + x + (sprite.width * 0.6)}px`;
         this.element.style.top = `${((sprite.stage.height / 2) + y) - 80 - (Math.floor(this.text.length / 30) * 16)}px`;
 
         this.element.className = `blocklike-${type}`;
@@ -44,13 +41,10 @@ export default class TextUI {
     }
 
     update() {
-        const width = this.sprite.costumes.get(this.sprite.costumeName)!.visibleWidth;
-        const height = this.sprite.costumes.get(this.sprite.costumeName)!.visibleHeight;
+        const x = this.sprite.x - this.sprite.width / 2;
+        const y = -this.sprite.y - this.sprite.height / 2;
 
-        const x = this.sprite.x - width / 2;
-        const y = -this.sprite.y - height / 2;
-
-        this.element.style.left = `${(this.sprite.stage.width / 2) + x + (width * 0.6)}px`;
+        this.element.style.left = `${(this.sprite.stage.width / 2) + x + (this.sprite.width * 0.6)}px`;
         this.element.style.top = `${((this.sprite.stage.height / 2) + y) - 80 - (Math.floor(this.text.length / 30) * 16)}px`;
 
         if (this.type === 'ask') {
