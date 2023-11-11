@@ -85,7 +85,7 @@ export default class Stage extends Entity {
             {signal: abort.signal}
         );
 
-        this.element.addEventListener(
+        document.addEventListener(
             "mousemove",
             e => {
                 this.mouseX = e.clientX - this.width / 2;
@@ -94,7 +94,7 @@ export default class Stage extends Entity {
             {signal: abort.signal}
         );
 
-        this.element.addEventListener(
+        document.addEventListener(
             "mousedown",
             () => {
                 this.mouseDown = true;
@@ -102,7 +102,7 @@ export default class Stage extends Entity {
             {signal: abort.signal}
         );
 
-        this.element.addEventListener(
+        document.addEventListener(
             "mouseup",
             () => {
                 this.mouseDown = false;
