@@ -7,8 +7,8 @@ export default class TextUI {
     constructor(sprite: Sprite, type: "say" | "think", text: string);
 
     constructor(readonly sprite: Sprite, readonly type: "ask" | "think" | "say", readonly text: string, askId?: string) {
-        const width = sprite.costumes.get(sprite.costume)!.visibleWidth;
-        const height = sprite.costumes.get(sprite.costume)!.visibleHeight;
+        const width = sprite.costumes.get(sprite.costumeName)!.visibleWidth;
+        const height = sprite.costumes.get(sprite.costumeName)!.visibleHeight;
 
         const x = sprite.x - width / 2;
         const y = -sprite.y - height / 2;
@@ -44,8 +44,8 @@ export default class TextUI {
     }
 
     update() {
-        const width = this.sprite.costumes.get(this.sprite.costume)!.visibleWidth;
-        const height = this.sprite.costumes.get(this.sprite.costume)!.visibleHeight;
+        const width = this.sprite.costumes.get(this.sprite.costumeName)!.visibleWidth;
+        const height = this.sprite.costumes.get(this.sprite.costumeName)!.visibleHeight;
 
         const x = this.sprite.x - width / 2;
         const y = -this.sprite.y - height / 2;
