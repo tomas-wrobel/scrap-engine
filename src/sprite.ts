@@ -29,7 +29,7 @@ class Sprite extends Entity {
 
         this.img.alt = "";
         this.img.draggable = false;
-        this.img.src = this.images[this.current];
+        this.img.src = images[this.current];
 
         // Initialize
         this.x = init.x;
@@ -41,8 +41,8 @@ class Sprite extends Entity {
         this.rotationStyle = init.rotationStyle;
 
         // Set up costumes
-        for (const key in this.images) {
-            this.costumes.set(key, new Costume(this.images[key]));
+        for (const key in images) {
+            this.costumes.set(key, new Costume(images[key]));
         }
 
         this.element.style.transformOrigin = "center center";
@@ -440,7 +440,8 @@ class Sprite extends Entity {
     }
 
     @method
-    async switchCostumeTo(name: string) {
+    async switchCostumeTo(value: string | number) {
+        const name = typeof value === "number" ? Object.keys(this.images)[value] : value;
         this.current = name;
         this.update();
     }

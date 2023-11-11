@@ -213,7 +213,7 @@ abstract class Entity {
      * @param name Name of the backdrop
      * @returns the id of the listeners
      */
-    async switchBackdropTo(_name: string): Promise<string> {
+    async switchBackdropTo(_value: number | string): Promise<string> {
         throw new Error("Not implemented");
     }
 
@@ -221,9 +221,7 @@ abstract class Entity {
     async nextBackdrop() {
         const backdrops = Object.keys(this.images);
         const index = backdrops.indexOf(this.current);
-        const next = backdrops[index + 1] ?? backdrops[0];
-
-        this.switchBackdropTo(next);
+        this.switchBackdropTo((index + 1) % backdrops.length);
     }
 
     /**

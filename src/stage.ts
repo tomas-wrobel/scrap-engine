@@ -144,7 +144,8 @@ export default class Stage extends Entity {
     }
 
     @method
-    async switchBackdropTo(name: string) {
+    async switchBackdropTo(value: string | number) {
+        const name = typeof value === "number" ? Object.keys(this.images)[value] : value;
         const detail = this.generateID();
         this.current = name;
         this.getBackdrops().dispatchEvent(
