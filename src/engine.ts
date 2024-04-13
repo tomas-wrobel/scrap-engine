@@ -15,7 +15,16 @@ export function init(options: SpriteOptions | StageOptions) {
         ...other
     } = options;
     
-    init.call($[name] = "x" in other ? new Sprite(images, sounds, other, current) : new Stage(images, sounds, current));
+    const entity = $[name] = "x" in other 
+        ? new Sprite(images, sounds, other, current) 
+        : new Stage(images, sounds, current)
+    ;
+
+    if (entity instanceof Sprite) {
+        entity.addTo($.Stage as Stage);
+    }
+
+    init.call(entity);
 }
 
 export interface StageOptions {
