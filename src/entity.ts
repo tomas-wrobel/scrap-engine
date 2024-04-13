@@ -353,7 +353,7 @@ abstract class Entity {
      */
     @method
     async getVariable(name: string) {
-        return this.variables.get(name)!.value;
+        return this.variable(name)!.value;
     }
 
     /**
@@ -362,38 +362,37 @@ abstract class Entity {
      * @param operator Operator to use when setting the variable
      */
     @method
-    async setVariable(name: string, value: any, operator: Entity.Operator) {
-        const variable = this.variables.get(name);
+    async setVariable(name: string, value: any) {
+        const variable = this.variable(name);
 
         if (!variable) {
             throw "Variable not declared";
         }
 
-        if (operator === "=") {
-            if (!isVariableType(variable.type, value)) {
-                throw "Invalid variable type";
-            }
-
-            variable.value = value;
-        } else if (variable.type === VariableType.Number && typeof value === "number") {
-            if (operator === "+=") {
-                variable.value += value;
-            } else if (operator === "-=") {
-                variable.value -= value;
-            } else if (operator === "*=") {
-                variable.value *= value;
-            } else if (operator === "**=") {
-                variable.value **= value;
-            } else if (operator === "/=") {
-                variable.value /= value;
-            } else if (operator === "%=") {
-                variable.value %= value;
-            } else {
-                throw "Invalid operator";
-            }
-        } else {
-            throw "Cannot perform arithmetic on non-number variable";
+        if (!isVariableType(variable.type, value)) {
+            throw "Invalid variable type";
         }
+
+        variable.value = value;
+
+        if (variable.visible) {
+            this.updateVariables();
+        }
+    }
+
+    @method
+    async changeVariable(name: string, value: number) {
+        const variable = this.variable(name);
+
+        if (!variable) {
+            throw "Variable not declared";
+        }
+
+        if (!isVariableType(variable.type, value)) {
+            throw "Invalid variable type";
+        }
+
+        variable.value = value;
 
         if (variable.visible) {
             this.updateVariables();
@@ -416,7 +415,7 @@ abstract class Entity {
      */
     @method
     async hideVariable(name: string) {
-        const variable = this.variables.get(name)!;
+        const variable = this.variable(name)!;
         variable.visible = false;
         this.updateVariables();
     }
@@ -426,7 +425,7 @@ abstract class Entity {
      */
     @method
     async showVariable(name: string) {
-        const variable = this.variables.get(name)!;
+        const variable = this.variable(name)!;
         variable.visible = true;
         this.updateVariables();
     }
@@ -445,6 +444,10 @@ abstract class Entity {
     async whenTimerElapsed(seconds: number, fn: Entity.Callback) {
         timer.whenElapsed(seconds * 1000, fn.bind(this));
     }
+
+    variable(name: string) {
+        return this.variables.get(name);
+    }
 }
 
 declare namespace Entity {
@@ -455,8 +458,6 @@ declare namespace Entity {
     interface Assets {
         [name: string]: string;
     }
-
-    type Operator = `${"+" | "-" | "*" | "**" | "/" | "%" | ""}=`;
 }
 
 export default Entity;

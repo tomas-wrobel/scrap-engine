@@ -5,6 +5,7 @@ import TextUI from "./textui";
 import {event, method, paced} from "./decorators";
 import {StopError, abort} from "./utils";
 import {target} from "./form";
+import {Variable} from "./variables";
 
 class Sprite extends Entity {
     element = document.createElement("div");
@@ -748,15 +749,8 @@ class Sprite extends Entity {
 
     [Symbol.toStringTag] = "Sprite";
 
-    @method
-    override async getVariable(name: string) {
-        if (this.variables.has(name)) {
-            return this.variables.get(name)!.value;
-        } else if (this.stage.variables.has(name)) {
-            return this.stage.variables.get(name)!.value;
-        } else {
-            throw "Variable not declared.";
-        }
+    override variable(name: string) {
+        return this.variables.get(name) ?? this.stage.variable(name);
     }
 }
 

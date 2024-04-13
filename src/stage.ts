@@ -240,7 +240,7 @@ export default class Stage extends Entity {
             const list = document.createElement("div");
             list.classList.add("scrap-list");
             for (let i = 0; i < value.length; i++) {
-                list.appendChild(this.variable(`${i}`, value[i]));
+                list.appendChild(this._variable(`${i}`, value[i]));
             }
             return list;
         }
@@ -252,14 +252,14 @@ export default class Stage extends Entity {
         return String(value);
     }
 
-    private value(dom: Node | string) {
+    private _value(dom: Node | string) {
         const value = document.createElement("div");
         value.classList.add("scrap-value");
         value.append(dom);
         return value;
     }
 
-    private variable(name: string, value: any) {
+    private _variable(name: string, value: any) {
         const div = document.createElement("div");
         div.classList.add("scrap-variable");
 
@@ -267,7 +267,7 @@ export default class Stage extends Entity {
         span.textContent = name;
 
         div.appendChild(span);
-        div.appendChild(this.value(this.makeWatchVariable(value)));
+        div.appendChild(this._value(this.makeWatchVariable(value)));
 
         return div;
     }
@@ -277,7 +277,7 @@ export default class Stage extends Entity {
 
         for (const [name, variable] of this.allVariables()) {
             if (variable.visible) {
-                const div = this.variable(name, variable.value);
+                const div = this._variable(name, variable.value);
 
                 if (variable.type === "Number") {
                     const slider = document.createElement("input");
@@ -290,7 +290,7 @@ export default class Stage extends Entity {
 
                     slider.oninput = () => {
                         variable.value = Number(slider.value);
-                        div.replaceChild(this.value(this.makeWatchVariable(slider.value)), div.querySelector(".scrap-value")!);
+                        div.replaceChild(this._value(this.makeWatchVariable(slider.value)), div.querySelector(".scrap-value")!);
                     };
 
                     div.ondblclick = () => div.classList.toggle("has-slider");
