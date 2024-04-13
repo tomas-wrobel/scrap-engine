@@ -210,12 +210,10 @@ abstract class Entity {
 
     /**
      * Switches the backdrop to the specified backdrop.
-     * @param name Name of the backdrop
+     * @param value Name or index of the backdrop
      * @returns the id of the listeners
      */
-    async switchBackdropTo(_value: number | string): Promise<string> {
-        throw new Error("Not implemented");
-    }
+    abstract switchBackdropTo(value: number | string): Promise<string>;
 
     @method
     async nextBackdrop() {
@@ -361,20 +359,41 @@ abstract class Entity {
     /**
      * @param name Name of the variable
      * @param value Value to set the variable to
+     * @param operator Operator to use when setting the variable
      */
     @method
-    async setVariable(name: string, value: any) {
+    async setVariable(name: string, value: any, operator: Entity.Operator) {
         const variable = this.variables.get(name);
 
         if (!variable) {
             throw "Variable not declared";
         }
 
-        if (!isVariableType(variable.type, value)) {
-            throw "Invalid variable type";
-        }
+        if (operator === "=") {
+            if (!isVariableType(variable.type, value)) {
+                throw "Invalid variable type";
+            }
 
-        variable.value = value;
+            variable.value = value;
+        } else if (variable.type === VariableType.Number && typeof value === "number") {
+            if (operator === "+=") {
+                variable.value += value;
+            } else if (operator === "-=") {
+                variable.value -= value;
+            } else if (operator === "*=") {
+                variable.value *= value;
+            } else if (operator === "**=") {
+                variable.value **= value;
+            } else if (operator === "/=") {
+                variable.value /= value;
+            } else if (operator === "%=") {
+                variable.value %= value;
+            } else {
+                throw "Invalid operator";
+            }
+        } else {
+            throw "Cannot perform arithmetic on non-number variable";
+        }
 
         if (variable.visible) {
             this.updateVariables();
@@ -388,31 +407,8 @@ abstract class Entity {
      * @param visible Whether the variable should be visible in the variables pane
      */
     @method
-    async declareVariable(name: string, type: VariableType) {
-        this.variables.set(name, {
-            value: DefaultVariableValues[type], 
-            visible: false, type
-        });
-    }
-
-    /**
-     * @param name Name of the variable
-     * @param value Value to change the variable by
-     */
-    @method
-    async changeVariable(name: string, value: number) {
-        const variable = this.variables.get(name)!;
-        const number = Number(variable.value);
-
-        if (isNaN(number)) {
-            throw new TypeError("Cannot change non-number variable");
-        }
-
-        variable.value = number + value;
-
-        if (variable.visible) {
-            this.updateVariables();
-        }
+    async declareVariable(name: string, type: VariableType, visible = false) {
+        this.variables.set(name, {value: DefaultVariableValues[type], visible, type});
     }
 
     /**
@@ -459,6 +455,8 @@ declare namespace Entity {
     interface Assets {
         [name: string]: string;
     }
+
+    type Operator = `${"+" | "-" | "*" | "**" | "/" | "%" | ""}=`;
 }
 
 export default Entity;

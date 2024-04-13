@@ -161,13 +161,14 @@ class Sprite extends Entity {
     }
 
     addTo(stage: Stage) {
+        this.stage = stage;
         stage.sprites.push(this);
         stage.element.appendChild(this.element);
-
-        this.stage = stage;
-        this.switchBackdropTo = stage.switchBackdropTo.bind(stage);
-
         return this.load();
+    }
+
+    switchBackdropTo(value: string | number) {
+        return this.stage.switchBackdropTo(value);
     }
 
     @event
@@ -746,6 +747,17 @@ class Sprite extends Entity {
     }
 
     [Symbol.toStringTag] = "Sprite";
+
+    @method
+    override async getVariable(name: string) {
+        if (this.variables.has(name)) {
+            return this.variables.get(name)!.value;
+        } else if (this.stage.variables.has(name)) {
+            return this.stage.variables.get(name)!.value;
+        } else {
+            throw "Variable not declared.";
+        }
+    }
 }
 
 declare namespace Sprite {

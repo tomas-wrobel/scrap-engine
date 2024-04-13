@@ -1,8 +1,19 @@
+export const abort = new AbortController();
+
+/*
+ * Thanks to message, we can stop
+ * Scrap project from IDE 
+ */
 export function stop() {
     window.postMessage("STOP", "*");
 }
 
-export const isTurbo = frameElement?.getAttribute("data-mode") === "turbo";
+window.addEventListener("message", e => {
+    if (e.data === "STOP") {
+        abort.abort();
+    }
+});
+
 
 export class StopError extends Error {
     constructor() {
@@ -11,13 +22,7 @@ export class StopError extends Error {
     }
 }
 
-export const abort = new AbortController();
-
-window.addEventListener("message", e => {
-    if (e.data === "STOP") {
-        abort.abort();
-    }
-});
+export const isTurbo = frameElement?.getAttribute("data-mode") === "turbo";
 
 /**
  * This is a loop guard function. It is injected 
