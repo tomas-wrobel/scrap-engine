@@ -19,6 +19,9 @@ class Sprite extends Entity {
     id = this.generateID();
 
     readonly costume = new Costumes(this);
+    get backdrop() {
+        return this.stage.backdrop;
+    }
 
     // Pen
     isPenDown = false;
