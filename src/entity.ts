@@ -31,14 +31,19 @@ abstract class Entity {
 
     pace = isTurbo ? 0 : 33;
 
+    readonly images: Entity.Assets;
+    readonly sounds: Entity.Assets;
+
     abstract element: HTMLElement;
     abstract whenFlag(fn: Entity.Callback): Promise<void>;
 
     audios: HTMLAudioElement[] = [];
-    protected current: string;
+    current: string;
 
-    constructor(readonly images: Entity.Assets, readonly sounds: Entity.Assets, current: number) {
-        this.current = Object.keys(images)[current];
+    constructor(options: Entity.Options) {
+        this.images = options.images;
+        this.sounds = options.sounds;
+        this.current = Object.keys(this.images)[options.current];
     }
 
     protected generateID() {
@@ -47,6 +52,10 @@ abstract class Entity {
 
     protected getBackdrops() {
         return backdrops;
+    }
+
+    init(fn: Entity.Callback) {
+        fn(this);
     }
 
     /**
@@ -107,7 +116,7 @@ abstract class Entity {
      */
     @event
     async whenLoaded(fn: Entity.Callback) {
-        setTimeout(fn.bind(this), 0);
+        setTimeout(fn, 0);
     }
 
     @event
@@ -116,7 +125,7 @@ abstract class Entity {
             "keydown", 
             e => {
                 if (key === "any" || e.key === key) {
-                    fn.call(this);
+                    fn(this);
                 }
             }, 
             {signal: abort.signal}
@@ -132,7 +141,7 @@ abstract class Entity {
         this.element.addEventListener(
             toEvent[event], 
             e => {
-                fn.call(this);
+                fn(this);
                 e.stopPropagation();
             },
             {signal: abort.signal}
@@ -153,7 +162,7 @@ abstract class Entity {
             e => {
                 const {detail} = e as Messages.Event;
 
-                fn.call(this).then(() =>
+                fn(this).then(() =>
                     document.dispatchEvent(
                         new CustomEvent("ScrapMessageDone", {
                             detail: {
@@ -237,7 +246,7 @@ abstract class Entity {
             e => {
                 const {detail} = e as Messages.Event;
 
-                fn.call(this).then(() =>
+                fn(this).then(() =>
                     document.dispatchEvent(
                         new CustomEvent("ScrapMessageDone", {
                             detail: {
@@ -442,7 +451,7 @@ abstract class Entity {
 
     @event
     async whenTimerElapsed(seconds: number, fn: Entity.Callback) {
-        timer.whenElapsed(seconds * 1000, fn.bind(this));
+        timer.whenElapsed(seconds * 1000, () => fn(this));
     }
 
     variable(name: string) {
@@ -452,11 +461,17 @@ abstract class Entity {
 
 declare namespace Entity {
     interface Callback {
-        (this: Entity): Promise<void>;
+        (this: void, self: Entity): Promise<void>;
     }
 
     interface Assets {
         [name: string]: string;
+    }
+
+    interface Options {
+        images: Assets;
+        sounds: Assets;
+        current: number;
     }
 }
 

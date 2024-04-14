@@ -5,7 +5,7 @@ import TextUI from "./textui";
 import {event, method, paced} from "./decorators";
 import {StopError, abort} from "./utils";
 import {target} from "./form";
-import {Variable} from "./variables";
+import Costumes from "./costumes";
 
 class Sprite extends Entity {
     element = document.createElement("div");
@@ -18,6 +18,8 @@ class Sprite extends Entity {
 
     id = this.generateID();
 
+    readonly costume = new Costumes(this);
+
     // Pen
     isPenDown = false;
     penSize = 1;
@@ -25,25 +27,34 @@ class Sprite extends Entity {
 
     textUi?: TextUI;
 
-    constructor(images: Entity.Assets, readonly sounds: Entity.Assets, init: Sprite.Init, current = 0) {
-        super(images, sounds, current);
+    constructor({
+        x = 0, 
+        y = 0, 
+        rotationStyle = 0,
+        draggable = false, 
+        direction = 90, 
+        visible = true, 
+        size = 100,
+        ...entity
+    }: Sprite.Options) {
+        super(entity);
 
         this.img.alt = "";
         this.img.draggable = false;
-        this.img.src = images[this.current];
+        this.img.src = entity.images[this.current];
 
         // Initialize
-        this.x = init.x;
-        this.y = init.y;
-        this.draggable = init.draggable;
-        this.direction = init.direction;
-        this.visible = init.visible;
-        this.size = init.size;
-        this.rotationStyle = init.rotationStyle;
+        this.x = x;
+        this.y = y;
+        this.draggable = draggable;
+        this.direction = direction;
+        this.visible = visible;
+        this.size = size;
+        this.rotationStyle = rotationStyle;
 
         // Set up costumes
-        for (const key in images) {
-            this.costumes.set(key, new Costume(images[key]));
+        for (const key in entity.images) {
+            this.costumes.set(key, new Costume(entity.images[key]));
         }
 
         this.element.style.transformOrigin = "center center";
@@ -61,14 +72,14 @@ class Sprite extends Entity {
         }
 
         this.done = true;
-        this.onload?.();
+        this.onload?.(this);
         this.update();
     }
 
     @event
     async whenLoaded(fn: Entity.Callback) {
         if (this.done) {
-            fn.call(this);
+            fn(this);
         } else {
             this.onload = fn;
         }
@@ -179,7 +190,7 @@ class Sprite extends Entity {
         this.stage.flag.addEventListener(
             "click",
             () => {
-                fn.call(this);
+                fn(this);
                 this.stage.toggleFlag(false);
             },
             {once: true, signal: abort.signal}
@@ -194,26 +205,26 @@ class Sprite extends Entity {
 
     @method
     async clone() {
-        const clone = new Sprite(this.images, this.sounds, {
+        const clone = new Sprite({
             x: this.x,
             y: this.y,
             direction: this.direction,
             draggable: this.draggable,
             visible: this.visible,
             size: this.size,
-            rotationStyle: this.rotationStyle
+            rotationStyle: this.rotationStyle,
+            current: this.costume.index,
+            images: this.images,
+            sounds: this.sounds
         });
 
+        clone.variable = this.variable.bind(this);
         clone.id = this.id;
-        clone.costumes = this.costumes;
-        clone.current = this.current;
 
-        await clone.addTo(this.stage);
-        clone.update();
-
-        document.dispatchEvent(new CustomEvent("ScrapSpriteClone", {detail: clone}));
-
-        return clone;
+        document.dispatchEvent(new CustomEvent(
+            "ScrapSpriteClone", 
+            {detail: clone}
+        ));
     }
 
     @method
@@ -228,7 +239,8 @@ class Sprite extends Entity {
             "ScrapSpriteClone",
             e => {
                 if (e.detail.id === this.id) {
-                    fn.call(e.detail);
+                    e.detail.whenLoaded(fn);
+                    e.detail.addTo(this.stage);
                     e.stopPropagation();
                 }
             },
@@ -727,14 +739,6 @@ class Sprite extends Entity {
         return this.stage.mouseDown;
     }
 
-    get costumeNumber() {
-        return [...this.costumes.keys()].indexOf(this.current);
-    }
-
-    get costumeName() {
-        return this.current;
-    }
-
     override updateVariables() {
         this.stage.updateVariables();
     }
@@ -764,6 +768,8 @@ declare namespace Sprite {
         size: number;
         rotationStyle: 0 | 1 | 2;
     }
+
+    type Options = Partial<Init> & Entity.Options;
 }
 
 interface Sprite extends Sprite.Init {}

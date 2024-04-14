@@ -1,3 +1,4 @@
+import Costumes from "./costumes";
 import {event, method} from "./decorators";
 import Entity from "./entity";
 import Sprite from "./sprite";
@@ -8,6 +9,8 @@ export default class Stage extends Entity {
     variableParent = document.createElement("div");
     flag = document.createElement("div");
     sprites: Sprite[] = [];
+
+    readonly backdrop = new Costumes(this);
 
     width = 480;
     height = 360;
@@ -20,8 +23,8 @@ export default class Stage extends Entity {
     ctx = document.createElement("canvas").getContext("2d")!;
     pen = document.createElement("canvas").getContext("2d")!;
 
-    constructor(images: Entity.Assets, sounds: Entity.Assets, current = 0) {
-        super(images, sounds, current);
+    constructor(options: Entity.Options) {
+        super(options);
         this.variableParent.classList.add("scrap-variables");
 
         this.element.style.width = `${this.width}px`;
@@ -136,7 +139,7 @@ export default class Stage extends Entity {
         this.flag.addEventListener(
             "click",
             () => {
-                fn.call(this);
+                fn(this);
                 this.toggleFlag(false);
             },
             {once: true, signal: abort.signal}
@@ -206,14 +209,6 @@ export default class Stage extends Entity {
         return this.keys.includes(key);
     }
 
-    get backdropName() {
-        return this.current;
-    }
-
-    get backdropNumber() {
-        return Object.keys(this.images).indexOf(this.current);
-    }
-
     private *allVariables() {
         yield* this.variables;
 
@@ -225,7 +220,7 @@ export default class Stage extends Entity {
     private makeWatchVariable(value: unknown): Node | string {
         if (value instanceof Sprite) {
             const img = document.createElement("img");
-            img.src = value.images[value.costumeNumber];
+            img.src = value.images[value.costume.index];
             img.style.maxWidth = "50px";
             img.style.maxHeight = "50px";
             img.alt = "";

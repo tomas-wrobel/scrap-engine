@@ -7,6 +7,4 @@ declare global {
         ScrapMessageDone: Messages.DoneEvent;
         ScrapSpriteClone: CustomEvent<Sprite>;
     }
-
-    var $: Record<string, Entity>;
 }
