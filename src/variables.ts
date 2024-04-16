@@ -1,11 +1,12 @@
 export enum VariableType {
-    Any = "Any",
-    Number = "Number",
-    String = "String",
-    Boolean = "Boolean",
-    Color = "Color",
+    Any = "any",
+    Number = "number",
+    String = "string",
+    Boolean = "boolean",
+    Color = "color",
     Array = "Array",
-    Sprite = "Sprite"
+    Sprite = "Sprite",
+    Iterable = "Iterable"
 }
 
 export const DefaultVariableValues = {
@@ -15,16 +16,15 @@ export const DefaultVariableValues = {
     [VariableType.Boolean]: false,
     [VariableType.Color]: "#000000" as `#${string}`,
     [VariableType.Array]: [] as any[],
-    [VariableType.Sprite]: null
+    [VariableType.Sprite]: null,
+    [VariableType.Iterable]: [] as any[] | string
 };
 
 export type Variable = {
-    [key in VariableType]: {
-        value: typeof DefaultVariableValues[key];
-        visible: boolean;
-        type: key;
-    };
-}[VariableType];
+    value: any;
+    visible: boolean;
+    types: VariableType[];
+}
 
 export function isVariableType<T extends VariableType>(
     type: T,
@@ -45,6 +45,8 @@ export function isVariableType<T extends VariableType>(
             return Array.isArray(value);
         case VariableType.Sprite:
             return String(value) === "[object Sprite]";
+        case VariableType.Iterable:
+            return Array.isArray(value) || typeof value === "string";
         default:
             throw new Error(`Unknown variable type: ${type}`);
     }

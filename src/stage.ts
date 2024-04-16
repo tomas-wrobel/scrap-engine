@@ -3,6 +3,7 @@ import {event, method} from "./decorators";
 import Entity from "./entity";
 import Sprite from "./sprite";
 import {abort} from "./utils";
+import {VariableType} from "./variables";
 
 export default class Stage extends Entity {
     element = document.createElement("div");
@@ -274,7 +275,7 @@ export default class Stage extends Entity {
             if (variable.visible) {
                 const div = this._variable(name, variable.value);
 
-                if (variable.type === "Number") {
+                if (variable.types.includes(VariableType.Number)) {
                     const slider = document.createElement("input");
 
                     slider.type = "range";

@@ -378,7 +378,7 @@ abstract class Entity {
             throw "Variable not declared";
         }
 
-        if (!isVariableType(variable.type, value)) {
+        if (variable.types.some(type => !isVariableType(type, value))) {
             throw "Invalid variable type";
         }
 
@@ -397,7 +397,7 @@ abstract class Entity {
             throw "Variable not declared";
         }
 
-        if (!isVariableType(variable.type, value)) {
+        if (variable.types.some(type => !isVariableType(type, value))) {
             throw "Invalid variable type";
         }
 
@@ -412,11 +412,14 @@ abstract class Entity {
      * Declares a variable.
      * @param name The name of the variable
      * @param value The value of the variable
-     * @param visible Whether the variable should be visible in the variables pane
      */
     @method
-    async declareVariable(name: string, type: VariableType, visible = false) {
-        this.variables.set(name, {value: DefaultVariableValues[type], visible, type});
+    async declareVariable(name: string, ...types: VariableType[]) {
+        this.variables.set(name, {
+            value: DefaultVariableValues[types[0]], 
+            visible: false,
+            types
+        });
     }
 
     /**
