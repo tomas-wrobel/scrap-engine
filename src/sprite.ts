@@ -223,6 +223,7 @@ class Sprite extends Entity {
 
         clone.variable = this.variable.bind(this);
         clone.id = this.id;
+        clone.addTo(this.stage);
 
         document.dispatchEvent(new CustomEvent(
             "ScrapSpriteClone", 
@@ -243,7 +244,6 @@ class Sprite extends Entity {
             e => {
                 if (e.detail.id === this.id) {
                     e.detail.whenLoaded(fn);
-                    e.detail.addTo(this.stage);
                     e.stopPropagation();
                 }
             },
