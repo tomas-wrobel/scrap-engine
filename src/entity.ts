@@ -116,7 +116,7 @@ abstract class Entity {
      */
     @event
     async whenLoaded(fn: Entity.Callback) {
-        setTimeout(fn, 0);
+        setTimeout(fn, 0, this);
     }
 
     @event

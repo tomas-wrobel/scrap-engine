@@ -1,6 +1,6 @@
 {
 	"name": "scrap-engine",
-	"version": "2.3.1",
+	"version": "2.3.2",
 	"description": "Bridging the gap between block programming and JavaScript",
 	"files": [
 		"dist/engine.js",
