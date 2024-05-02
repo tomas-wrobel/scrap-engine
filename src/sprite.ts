@@ -31,12 +31,12 @@ class Sprite extends Entity {
     textUi?: TextUI;
 
     constructor({
-        x = 0, 
-        y = 0, 
+        x = 0,
+        y = 0,
         rotationStyle = 0,
-        draggable = false, 
-        direction = 90, 
-        visible = true, 
+        draggable = false,
+        direction = 90,
+        visible = true,
         size = 100,
         ...entity
     }: Sprite.Options) {
@@ -75,38 +75,55 @@ class Sprite extends Entity {
         }
 
         this.done = true;
-        this.onload?.(this);
+        await this.onload?.(this);
         this.update();
     }
 
     @event
     async whenLoaded(fn: Entity.Callback) {
         if (this.done) {
-            fn(this);
+            setTimeout(fn, 0, this);
+        } else if (this.onload) {
+            const loader = this.onload;
+            this.onload = async () => {
+                await loader(this);
+                await fn(this);
+            };
         } else {
             this.onload = fn;
         }
     }
 
-    update(): void {
+    private updateCostume() {
         const costume = this.costumes.get(this.current)!;
 
         if (this.img.src !== costume.src) {
             this.img.src = costume.src;
         }
+    }
 
+    private updateSize() {
+        this.element.style.width = `${this.width}px`;
+        this.element.style.height = `${this.height}px`;
+    }
+
+    private updateXY() {
         const x = this.x - this.width / 2;
         const y = -this.y - this.height / 2;
 
-        this.element.style.width = `${this.width}px`;
-        this.element.style.height = `${this.height}px`;
-        this.element.style.filter = this.toFilter();
-
         this.element.style.left = `${x + this.stage.width / 2}px`;
         this.element.style.top = `${y + this.stage.height / 2}px`;
+    }
 
+    private updateFilter() {
+        this.element.style.filter = this.toFilter();
+    }
+
+    private updateVisibility() {
         this.element.style.visibility = this.visible ? "visible" : "hidden";
+    }
 
+    private updateRotation() {
         if (this.rotationStyle === 0) {
             this.element.style.transform = `rotate(${this.direction - 90}deg)`;
         }
@@ -118,12 +135,24 @@ class Sprite extends Entity {
         if (this.rotationStyle === 2) {
             this.element.style.transform = "";
         }
+    }
 
+    private updateDraggable() {
         if (this.draggable) {
             this.element.addEventListener("mousedown", this, {signal: abort.signal});
         } else {
             this.element.removeEventListener("mousedown", this);
         }
+    }
+
+    update() {
+        this.updateCostume();
+        this.updateDraggable();
+        this.updateFilter();
+        this.updateRotation();
+        this.updateSize();
+        this.updateVisibility();
+        this.updateXY();
 
         this.textUi?.update();
     }
@@ -160,9 +189,11 @@ class Sprite extends Entity {
             // while dragging
             if (this.img.src !== image.src) {
                 image.src = this.img.src;
+                this.updateSize();
             }
 
-            this.update();
+            this.updateXY();
+            this.textUi?.update();
         };
 
         const mouseup = () => {
@@ -226,7 +257,7 @@ class Sprite extends Entity {
         clone.addTo(this.stage);
 
         document.dispatchEvent(new CustomEvent(
-            "ScrapSpriteClone", 
+            "ScrapSpriteClone",
             {detail: clone}
         ));
     }
@@ -234,7 +265,7 @@ class Sprite extends Entity {
     @method
     async setDraggable(draggable: boolean) {
         this.draggable = draggable;
-        this.update();
+        this.updateDraggable();
     }
 
     @event
@@ -267,7 +298,8 @@ class Sprite extends Entity {
             this.stage.pen.stroke();
         }
 
-        this.update();
+        this.updateXY();
+        this.textUi?.update();
     }
 
     /**
@@ -362,13 +394,13 @@ class Sprite extends Entity {
         } else {
             this.direction = (direction + (360 * 10)) % 360;
         }
-        this.update();
+        this.updateRotation();
     }
 
     @paced
     async pointTowards(sprite: Sprite) {
         this.direction = Sprite.computeDirectionTo(this.x, this.y, sprite.x, sprite.y);
-        this.update();
+        this.updateRotation();
     }
 
     private static computeDirectionTo(fromX: number, fromY: number, toX: number, toY: number) {
@@ -384,19 +416,19 @@ class Sprite extends Entity {
     @paced
     async pointTo(x: number, y: number) {
         this.direction = Sprite.computeDirectionTo(this.x, this.y, x, y);
-        this.update();
+        this.updateRotation();
     }
 
     @paced
     async turnLeft(degrees: number) {
         this.direction = (this.direction + degrees) % 360;
-        this.update();
+        this.updateRotation();
     }
 
     @paced
     async turnRight(degrees: number) {
         this.direction = (this.direction + 360 - degrees) % 360;
-        this.update();
+        this.updateRotation();
     }
 
     @method
@@ -410,7 +442,7 @@ class Sprite extends Entity {
         } else {
             this.rotationStyle = style;
         }
-        this.update();
+        this.updateRotation();
     }
 
     @method
@@ -437,7 +469,7 @@ class Sprite extends Entity {
 
         const degrees = Math.atan2(dy, dx) * 180 / Math.PI;
         this.direction = (360 - degrees + 90) % 360;
-        this.update();
+        this.updateRotation();
     }
 
     @method
@@ -464,7 +496,9 @@ class Sprite extends Entity {
     async switchCostumeTo(value: string | number) {
         const name = typeof value === "number" ? Object.keys(this.images)[value] : value;
         this.current = name;
-        this.update();
+        this.updateCostume();
+        this.updateSize();
+        this.textUi?.update();
     }
 
     @method
@@ -479,25 +513,25 @@ class Sprite extends Entity {
     @method
     async show() {
         this.visible = true;
-        this.update();
+        this.updateVisibility();
     }
 
     @method
     async hide() {
         this.visible = false;
-        this.update();
+        this.updateVisibility();
     }
 
     @paced
     async setSize(size: number) {
         this.size = size;
-        this.update();
+        this.updateSize();
     }
 
     @paced
     async changeSize(size: number) {
         this.size += size;
-        this.update();
+        this.updateSize();
     }
 
     @method
@@ -554,10 +588,18 @@ class Sprite extends Entity {
         this.textUi?.delete();
         this.textUi = new TextUI(this, "ask", text, askId);
 
-        return new Promise<string>(resolve => {
+        return new Promise<string>((resolve, reject) => {
+            const stop = () => {
+                abort.signal.removeEventListener("abort", stop);
+                this.textUi?.delete();
+                delete this.textUi;
+                reject(new StopError());
+            };
+
             target.addEventListener(
                 askId,
                 e => {
+                    abort.signal.removeEventListener("abort", stop);
                     const {detail} = e as CustomEvent<string>;
                     this.textUi?.delete();
                     delete this.textUi;
@@ -565,6 +607,8 @@ class Sprite extends Entity {
                 },
                 {once: true, signal: abort.signal}
             );
+
+            abort.signal.addEventListener("abort", stop);
         });
     }
 

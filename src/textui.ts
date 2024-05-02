@@ -28,7 +28,7 @@ export default class TextUI {
             btn.innerHTML = "&#x2713;";
             input.id = askId!;
 
-            form.action = `javascript:Scrap.Form.submit("${askId}")`;
+            form.action = `javascript:Scrap.answer("${askId}")`;
 
             form.append(input, btn);
             this.element.append(form);
