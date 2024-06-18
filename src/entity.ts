@@ -55,7 +55,7 @@ abstract class Entity {
     }
 
     init(fn: Entity.Callback) {
-        fn(this);
+        setTimeout(fn, 0, this);
     }
 
     /**
