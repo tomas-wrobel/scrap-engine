@@ -55,7 +55,7 @@ abstract class Entity {
     }
 
     init(fn: Entity.Callback) {
-        setTimeout(fn, 0, this);
+        window.setTimeout(fn, 0, this);
     }
 
     /**
@@ -108,7 +108,7 @@ abstract class Entity {
      */
     @method
     wait(seconds: number) {
-        return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+        return new Promise(resolve => window.setTimeout(resolve, seconds * 1000));
     }
 
     /**
@@ -116,7 +116,7 @@ abstract class Entity {
      */
     @event
     async whenLoaded(fn: Entity.Callback) {
-        setTimeout(fn, 0, this);
+        window.setTimeout(fn, 0, this);
     }
 
     @event

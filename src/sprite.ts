@@ -82,7 +82,7 @@ class Sprite extends Entity {
     @event
     async whenLoaded(fn: Entity.Callback) {
         if (this.done) {
-            setTimeout(fn, 0, this);
+            window.setTimeout(fn, 0, this);
         } else if (this.onload) {
             const loader = this.onload;
             this.onload = async () => {

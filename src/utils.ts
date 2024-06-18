@@ -34,6 +34,6 @@ export function loop(resolve: VoidFunction, reject: (reason: Error) => void) {
     if (abort.signal.aborted) {
         reject(new StopError());
     } else {
-        setTimeout(resolve);
+        window.setTimeout(resolve);
     }
 }

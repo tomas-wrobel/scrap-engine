@@ -6,8 +6,8 @@ class Timer {
         this.now = Date.now();
 
         for (const data of this.listeners) {
-            clearTimeout(data[0]);
-            data[0] = setTimeout(
+            window.clearTimeout(data[0]);
+            data[0] = window.setTimeout(
                 data[2],
                 data[1] - (Date.now() - this.now)
             );
@@ -16,7 +16,7 @@ class Timer {
 
     whenElapsed(time: number, callback: () => Promise<void>) {
         this.listeners.push([
-            setTimeout(
+            window.setTimeout(
                 callback, 
                 time - (Date.now() - this.now)
             ), 

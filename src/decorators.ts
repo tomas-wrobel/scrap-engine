@@ -17,7 +17,7 @@ export function paced<A extends any[], T, E extends Entity>(
         return new Promise<T>((resolve, reject) => {
             const controller = new AbortController();
 
-            const timeout = setTimeout(
+            const timeout = window.setTimeout(
                 () => {
                     controller.abort();
                     resolve(fn.apply(this, args));
@@ -29,7 +29,7 @@ export function paced<A extends any[], T, E extends Entity>(
                 "message",
                 e => {
                     if (e.data === "STOP") {
-                        clearTimeout(timeout);
+                        window.clearTimeout(timeout);
                         reject(new StopError());
                     }
                 },
