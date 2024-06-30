@@ -1,11 +1,7 @@
 {
 	"name": "scrap-engine",
-	"version": "2.4.1",
+	"version": "2.4.2",
 	"description": "Bridging the gap between block programming and JavaScript",
-	"files": [
-		"dist/engine.js",
-		"dist/style.css"
-	],
 	"keywords": [
 		"blocklike",
 		"block",
