@@ -1,6 +1,6 @@
 import type Sprite from "./sprite";
 
-export default class TextUI {
+class TextUI {
     element = document.createElement("div");
 
     constructor(sprite: Sprite, type: "ask", text: string, askId: string);
@@ -57,10 +57,15 @@ export default class TextUI {
         this.element.style.visibility = this.sprite.visible ? "visible" : "hidden";
     }
 
-    declare update(): void;
 
     delete() {
         this.element.remove();
         window.removeEventListener("resize", this.update);
     }
 }
+
+interface TextUI {
+    update(): void;
+}
+
+export default TextUI;
