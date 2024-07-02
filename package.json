@@ -1,6 +1,6 @@
 {
 	"name": "scrap-engine",
-	"version": "2.5.0",
+	"version": "2.5.1",
 	"description": "Bridging the gap between block programming and JavaScript",
 	"keywords": [
 		"blocklike",
