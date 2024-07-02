@@ -13,8 +13,8 @@ export default class Stage extends Entity {
 
     readonly backdrop = new Costumes(this);
 
-    width = 480;
-    height = 360;
+    width = innerWidth;
+    height = innerHeight;
 
     keys: string[] = [];
     mouseDown = false;
