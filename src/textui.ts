@@ -10,6 +10,9 @@ export default class TextUI {
         const x = sprite.x - sprite.width / 2;
         const y = -sprite.y - sprite.height / 2;
 
+        this.update = this.update.bind(this);
+        window.addEventListener("resize", this.update);
+
         this.element.style.position = "absolute";
         this.element.append(text, document.createElement("br"));
 
@@ -40,7 +43,7 @@ export default class TextUI {
         this.sprite.stage.element.insertBefore(this.element, this.sprite.element);
     }
 
-    update() {
+    private static update(this: TextUI) {
         const x = this.sprite.x - this.sprite.width / 2;
         const y = -this.sprite.y - this.sprite.height / 2;
 
@@ -54,7 +57,10 @@ export default class TextUI {
         this.element.style.visibility = this.sprite.visible ? "visible" : "hidden";
     }
 
+    declare update(): void;
+
     delete() {
         this.element.remove();
+        window.removeEventListener("resize", this.update);
     }
 }

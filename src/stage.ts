@@ -13,8 +13,8 @@ export default class Stage extends Entity {
 
     readonly backdrop = new Costumes(this);
 
-    width = innerWidth;
-    height = innerHeight;
+    width = window.innerWidth;
+    height = window.innerHeight;
 
     keys: string[] = [];
     mouseDown = false;
@@ -79,6 +79,19 @@ export default class Stage extends Entity {
                 }
             },
             {signal: abort.signal}
+        );
+
+        window.addEventListener(
+            "resize",
+            () => {
+                this.width = window.innerWidth;
+                this.height = window.innerHeight;
+                this.element.style.width = `${this.width}px`;
+                this.element.style.height = `${this.height}px`;
+
+                flag.style.width = `${this.width}px`;
+                flag.style.height = `${this.height}px`;
+            }
         );
 
         window.addEventListener(
