@@ -60,6 +60,9 @@ class Sprite extends Entity {
             this.costumes.set(key, new Costume(entity.images[key]));
         }
 
+        this.updateXY = Sprite.updateXY.bind(this);
+        window.addEventListener("resize", this.updateXY);
+
         this.element.style.transformOrigin = "center center";
         this.element.style.position = "absolute";
         this.img.style.width = "100%";
@@ -107,7 +110,7 @@ class Sprite extends Entity {
         this.element.style.height = `${this.height}px`;
     }
 
-    private updateXY() {
+    private static updateXY(this: Sprite) {
         const x = this.x - this.width / 2;
         const y = -this.y - this.height / 2;
 
@@ -819,6 +822,8 @@ declare namespace Sprite {
     type Options = Partial<Init> & Entity.Options;
 }
 
-interface Sprite extends Sprite.Init {}
+interface Sprite extends Sprite.Init {
+    updateXY(): void;
+}
 
 export default Sprite;
