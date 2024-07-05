@@ -10,7 +10,7 @@ class TextUI {
         const x = sprite.x - sprite.width / 2;
         const y = -sprite.y - sprite.height / 2;
 
-        this.update = this.update.bind(this);
+        this.update = TextUI.update.bind(this);
         window.addEventListener("resize", this.update);
 
         this.element.style.position = "absolute";
